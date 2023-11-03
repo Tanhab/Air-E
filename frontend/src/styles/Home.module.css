@@ -47,6 +47,7 @@
         width: 350px; /* Set your desired width */
         z-index: 100;
         height: 100%;
+        overflow-y: scroll;
         background-color: #87CEEB; /* Background color of the sidebar */
         box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2); /* Add shadow for a raised effect */
         transform: translateX(0); /* Show the sidebar by translating it from the left */

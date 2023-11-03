@@ -4,7 +4,8 @@ import mapboxgl from "mapbox-gl";
 import styles from "../styles/Home.module.css";
 import Navbar from "../components/navbar";
 import Modal from "@mui/material/Modal";
-import { Box, Button, Typography } from "@mui/material";
+import { Box, Button, Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper} from "@mui/material";
+
 
 mapboxgl.accessToken = import.meta.env.VITE_MAPBOX_TOKEN;
 
@@ -22,6 +23,19 @@ export default function Home() {
   const [markers, setMarkers] = useState([]);
 
 
+  const dummyData = [
+    { rank: 1, city: 'City 1', aqi: 20 },
+    { rank: 2, city: 'City 2', aqi: 30 },
+    { rank: 2, city: 'City 2', aqi: 30 },
+    { rank: 2, city: 'City 2', aqi: 30 },
+    { rank: 2, city: 'City 2', aqi: 30 },
+    { rank: 2, city: 'City 2', aqi: 30 },
+    { rank: 2, city: 'City 2', aqi: 30 },
+    { rank: 2, city: 'City 2', aqi: 30 },
+    { rank: 2, city: 'City 2', aqi: 30 },
+    { rank: 2, city: 'City 2', aqi: 30 },
+    // Add more dummy data for 10 rows
+  ];
   useEffect(() => {
     if (!map.current) {
       map.current = new mapboxgl.Map({
@@ -64,7 +78,8 @@ export default function Home() {
     setIsModalOpen(false);
   };
 
-  const toggleSidebar = () => {
+  const toggleSidebar = (event) => {
+    if(event.target.id === "close_button" || event.target.id === "img")
     setShowSidebar(!showSidebar);
   };
 
@@ -86,6 +101,7 @@ export default function Home() {
             style={{ zIndex: 101 }}
             className={styles.searchBar}
             onClick={toggleSidebar}
+            id="img"
           />
         ) : null}
 
@@ -95,22 +111,74 @@ export default function Home() {
               sx={{ color: "black" }}
               className={styles.closeButton}
               onClick={toggleSidebar}
+              id="close_button"
             >
               Close
             </Button>
             <br></br>
-
             <Typography
-          variant="h5"
-          sx={{
-            fontWeight: 700,
-            color: "white",
-            marginLeft:2,
-            mb: 5,
-          }}
-        >
-         Top 10 clean cities
-        </Typography>
+              variant="h5"
+              sx={{
+                fontWeight: 700,
+                color: "white",
+                marginLeft: 6,
+                mb: 5,
+              }}
+            >
+              Top 10 clean cities
+            </Typography>
+            <TableContainer component={Paper}>
+            <Table>
+              <TableHead>
+                <TableRow sx={{padding: 0, margin:0}}>
+                  <TableCell>Rank</TableCell>
+                  <TableCell>City</TableCell>
+                  <TableCell>AQI</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {dummyData.map((row) => (
+                  <TableRow key={row.rank}>
+                    <TableCell>{row.rank}</TableCell>
+                    <TableCell>{row.city}</TableCell>
+                    <TableCell>{row.aqi}</TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+          <br/> <br/>
+          <Typography
+              variant="h5"
+              sx={{
+                fontWeight: 700,
+                color: "white",
+                marginLeft: 6,
+                mb: 5,
+              }}
+            >
+              Top 10 clean cities
+            </Typography>
+            <TableContainer component={Paper}>
+            <Table>
+              <TableHead>
+                <TableRow sx={{padding: 0, margin:0}}>
+                  <TableCell>Rank</TableCell>
+                  <TableCell>City</TableCell>
+                  <TableCell>AQI</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {dummyData.map((row) => (
+                  <TableRow key={row.rank}>
+                    <TableCell>{row.rank}</TableCell>
+                    <TableCell>{row.city}</TableCell>
+                    <TableCell>{row.aqi}</TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
 
           </div>
         )}
