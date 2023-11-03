@@ -15,7 +15,27 @@ const password = (value, helpers) => {
   return value;
 };
 
+const latitudeValidator = (value, helpers)=>{
+
+  if(!(value>=-90 && value<=90)){
+    return helpers.message('latitude must be in range [-90, 90]');
+  }
+
+  return value;
+}
+
+const longitudeValidator = (value, helpers)=>{
+
+  if(!(value>=-180 && value<=180)){
+    return helpers.message('longitude must be in range [-180, 180]');
+  }
+
+  return value;
+}
+
 module.exports = {
   objectId,
   password,
+  longitudeValidator,
+  latitudeValidator
 };
