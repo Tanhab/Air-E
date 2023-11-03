@@ -1,7 +1,7 @@
 import React, { useRef, useEffect, useState } from 'react';
 import mapboxgl from 'mapbox-gl';
-// import Legend from './components/Legend';
-// import Optionsfield from './components/Optionsfield';
+import Legend from '../components/Legend';
+import Optionsfield from '../components/OptionsField';
 // import './Map.css';
 import data from "../data/data.json"
 
@@ -122,12 +122,12 @@ const Map = () => {
   return (
     <div>
       <div style={{height : "100vh"}} ref={mapContainerRef} className='map-container' />
-      {/* <Legend active={active} stops={active.stops} />
+       <Legend active={active} stops={active.stops} />
       <Optionsfield
         options={options}
         property={active.property}
         changeState={changeState}
-      /> */}
+      />
     </div>
   );
 };
