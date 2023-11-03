@@ -19,6 +19,8 @@ export default function Home() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [clickedLatLng, setClickedLatLng] = useState(null);
   const [showSidebar, setShowSidebar] = useState(false);
+  const [markers, setMarkers] = useState([]);
+
 
   useEffect(() => {
     if (!map.current) {
@@ -37,8 +39,18 @@ export default function Home() {
       });
 
       map.current.on("click", (e) => {
-        console.log(e.lngLat);
-        openModal(e.lngLat.lat, e.lngLat.lng);
+        const { lng, lat } = e.lngLat;
+
+        // Create a new marker object
+        const newMarker = new mapboxgl.Marker()
+          .setLngLat([lng, lat])
+          .addTo(map.current);
+  
+        // Store the marker data in the state
+        setMarkers((prevMarkers) => [...prevMarkers, { lat, lng }]);
+  
+        // Open the modal
+        openModal(lat, lng);
       });
     }
   }, [lng, lat, zoom]);
@@ -118,6 +130,11 @@ export default function Home() {
             </div>
           )}
         </div>
+        {markers.map((marker, index) => (
+      <div key={index} className={styles.mapMarker} style={{ left: "50%", top: "50%" }}>
+        {/* <img src="/flag.png" height={30} width={30} alt="" /> */}
+      </div>
+    ))};
       </div>
 
       <Modal
@@ -125,13 +142,18 @@ export default function Home() {
         onClose={closeModal}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
+        BackdropProps={{
+          style: {
+            backgroundColor: "rgba(0, 0, 0, 0)", // Set a transparent background
+          },
+        }}
       >
         <Box
           sx={{
             position: "absolute",
-            top: "50%",
-            left: "50%",
-            transform: "translate(-50%, -50%)",
+            bottom: "20%",
+            right: "15%",
+            transform: "translate(50%, 50%)",
             width: 400,
             bgcolor: "background.paper",
             border: "2px solid #000",
