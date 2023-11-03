@@ -4,8 +4,21 @@ import mapboxgl from "mapbox-gl";
 import styles from "../styles/Home.module.css";
 import Navbar from "../components/navbar";
 import Modal from "@mui/material/Modal";
-import { Box, Button, Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper} from "@mui/material";
 
+import {
+  Box,
+  Button,
+  Typography,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+  Grid,
+  Skeleton,
+} from "@mui/material";
 
 mapboxgl.accessToken = import.meta.env.VITE_MAPBOX_TOKEN;
 
@@ -21,19 +34,19 @@ export default function Home() {
   const [clickedLatLng, setClickedLatLng] = useState(null);
   const [showSidebar, setShowSidebar] = useState(false);
   const [markers, setMarkers] = useState([]);
-
+  const [loading, setLoading] = useState(false);
 
   const dummyData = [
-    { rank: 1, city: 'City 1', aqi: 20 },
-    { rank: 2, city: 'City 2', aqi: 30 },
-    { rank: 2, city: 'City 2', aqi: 30 },
-    { rank: 2, city: 'City 2', aqi: 30 },
-    { rank: 2, city: 'City 2', aqi: 30 },
-    { rank: 2, city: 'City 2', aqi: 30 },
-    { rank: 2, city: 'City 2', aqi: 30 },
-    { rank: 2, city: 'City 2', aqi: 30 },
-    { rank: 2, city: 'City 2', aqi: 30 },
-    { rank: 2, city: 'City 2', aqi: 30 },
+    { rank: 1, city: "City 1", aqi: 20 },
+    { rank: 2, city: "City 2", aqi: 30 },
+    { rank: 2, city: "City 2", aqi: 30 },
+    { rank: 2, city: "City 2", aqi: 30 },
+    { rank: 2, city: "City 2", aqi: 30 },
+    { rank: 2, city: "City 2", aqi: 30 },
+    { rank: 2, city: "City 2", aqi: 30 },
+    { rank: 2, city: "City 2", aqi: 30 },
+    { rank: 2, city: "City 2", aqi: 30 },
+    { rank: 2, city: "City 2", aqi: 30 },
     // Add more dummy data for 10 rows
   ];
   useEffect(() => {
@@ -59,10 +72,10 @@ export default function Home() {
         const newMarker = new mapboxgl.Marker()
           .setLngLat([lng, lat])
           .addTo(map.current);
-  
+
         // Store the marker data in the state
         setMarkers((prevMarkers) => [...prevMarkers, { lat, lng }]);
-  
+
         // Open the modal
         openModal(lat, lng);
       });
@@ -79,8 +92,8 @@ export default function Home() {
   };
 
   const toggleSidebar = (event) => {
-    if(event.target.id === "close_button" || event.target.id === "img")
-    setShowSidebar(!showSidebar);
+    if (event.target.id === "close_button" || event.target.id === "img")
+      setShowSidebar(!showSidebar);
   };
 
   const handleSidebarClick = (event) => {
@@ -104,11 +117,10 @@ export default function Home() {
             id="img"
           />
         ) : null}
-
         {showSidebar && (
           <div className={styles.sidebarOpen} onClick={handleSidebarClick}>
             <Button
-              sx={{ color: "black" }}
+              sx={{ color: "black", fontWeight:700 }}
               className={styles.closeButton}
               onClick={toggleSidebar}
               id="close_button"
@@ -117,72 +129,86 @@ export default function Home() {
             </Button>
             <br></br>
             <Typography
-              variant="h5"
+              variant="h6"
               sx={{
                 fontWeight: 700,
                 color: "white",
                 marginLeft: 6,
-                mb: 5,
+                mb: 2,
               }}
             >
-              Top 10 clean cities
+              Top 10 Cleanest Cities
             </Typography>
             <TableContainer component={Paper}>
-            <Table>
-              <TableHead>
-                <TableRow sx={{padding: 0, margin:0}}>
-                  <TableCell>Rank</TableCell>
-                  <TableCell>City</TableCell>
-                  <TableCell>AQI</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {dummyData.map((row) => (
-                  <TableRow key={row.rank}>
-                    <TableCell>{row.rank}</TableCell>
-                    <TableCell>{row.city}</TableCell>
-                    <TableCell>{row.aqi}</TableCell>
+              <Table>
+                <TableHead>
+                  <TableRow sx={{ padding: 0, margin: 0 }}>
+                    <TableCell align="center" style={{ fontWeight: "bold" }}>Rank</TableCell>
+                    <TableCell style={{ fontWeight: "bold" }}>City</TableCell>
+                    <TableCell style={{ fontWeight: "bold" }}>AQI</TableCell>
                   </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
-          <br/> <br/>
-          <Typography
-              variant="h5"
+                </TableHead>
+                <TableBody>
+                  {dummyData.map((row) => (
+                    <TableRow key={row.rank}>
+                      <TableCell align="center">
+                        {row.rank === 1 ? (
+                          <span>
+                            <img src="/trophy.png" height={30} width={30} />
+                          </span>
+                        ) : (
+                          row.rank
+                        )}
+                      </TableCell>
+                      <TableCell>{row.city}</TableCell>
+                      <TableCell>{row.aqi}</TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
+            <br />
+            <Typography
+              variant="h6"
               sx={{
                 fontWeight: 700,
                 color: "white",
                 marginLeft: 6,
-                mb: 5,
+                mb: 2,
               }}
             >
-              Top 10 clean cities
+              Top 10 Polluted Cities
             </Typography>
             <TableContainer component={Paper}>
-            <Table>
-              <TableHead>
-                <TableRow sx={{padding: 0, margin:0}}>
-                  <TableCell>Rank</TableCell>
-                  <TableCell>City</TableCell>
-                  <TableCell>AQI</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {dummyData.map((row) => (
-                  <TableRow key={row.rank}>
-                    <TableCell>{row.rank}</TableCell>
-                    <TableCell>{row.city}</TableCell>
-                    <TableCell>{row.aqi}</TableCell>
+              <Table>
+                <TableHead>
+                  <TableRow sx={{ padding: 0, margin: 0 }}>
+                    <TableCell align="center" style={{ fontWeight: "bold" }}>Rank</TableCell>
+                    <TableCell style={{ fontWeight: "bold" }}>City</TableCell>
+                    <TableCell style={{ fontWeight: "bold" }}>AQI</TableCell>
                   </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
-
+                </TableHead>
+                <TableBody>
+                  {dummyData.map((row) => (
+                    <TableRow key={row.rank} style={{ marginBottom: 10 }}>
+                      <TableCell align="center">
+                        {row.rank === 1 ? (
+                          <span>
+                            <img src="/trophy.png" height={30} width={30} />
+                          </span>
+                        ) : (
+                          row.rank
+                        )}
+                      </TableCell>
+                      <TableCell>{row.city}</TableCell>
+                      <TableCell>{row.aqi}</TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
           </div>
         )}
-
         <div
           className={styles.mapcontainer}
           ref={mapContainer}
@@ -199,10 +225,15 @@ export default function Home() {
           )}
         </div>
         {markers.map((marker, index) => (
-      <div key={index} className={styles.mapMarker} style={{ left: "50%", top: "50%" }}>
-        {/* <img src="/flag.png" height={30} width={30} alt="" /> */}
-      </div>
-    ))};
+          <div
+            key={index}
+            className={styles.mapMarker}
+            style={{ left: "50%", top: "50%" }}
+          >
+            {/* <img src="/flag.png" height={30} width={30} alt="" /> */}
+          </div>
+        ))}
+        ;
       </div>
 
       <Modal
@@ -219,30 +250,97 @@ export default function Home() {
         <Box
           sx={{
             position: "absolute",
-            bottom: "20%",
+            bottom: "30%",
             right: "15%",
             transform: "translate(50%, 50%)",
             width: 400,
-            bgcolor: "background.paper",
-            border: "2px solid #000",
+            bgcolor: "#C1E1C1",
             boxShadow: 24,
             p: 4,
           }}
         >
           {clickedLatLng && (
             <>
-              <Typography id="modal-modal-title" variant="h6" component="h2">
-                Clicked Coordinates
-              </Typography>
-              <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-                Latitude: {clickedLatLng.lat}
-              </Typography>
-              <Typography sx={{ mt: 2 }}>
-                Longitude: {clickedLatLng.lng}
-              </Typography>
+              {!loading ? (
+                <>
+                  <Grid container spacing={2}>
+                    <Grid item xs={12}>
+                      <Typography>
+                        <span style={{ fontWeight: "bold" }}>Location:</span>{" "}
+                        {clickedLatLng.lat}
+                      </Typography>
+                    </Grid>
+                    {/* Left Column */}
+                    <Grid item xs={6}>
+                      <Typography>
+                        <span style={{ fontWeight: "bold" }}>Latitude:</span>{" "}
+                        {clickedLatLng.lat}
+                      </Typography>
+                      <Typography>
+                        <span style={{ fontWeight: "bold" }}>Longitude:</span>{" "}
+                        {clickedLatLng.lng}
+                      </Typography>
+                      <Typography>
+                        <span style={{ fontWeight: "bold" }}>AQI:</span>{" "}
+                        {clickedLatLng.lng}
+                      </Typography>
+                      <Typography>
+                        <span style={{ fontWeight: "bold" }}>
+                          PM2.5 levels:
+                        </span>{" "}
+                        {clickedLatLng.lng}
+                      </Typography>
+                      <Typography>
+                        <span style={{ fontWeight: "bold" }}>PM10 levels:</span>{" "}
+                        {clickedLatLng.lng}
+                      </Typography>
+                      <Typography>
+                        <span style={{ fontWeight: "bold" }}>
+                          Ozone Levels:
+                        </span>{" "}
+                        {clickedLatLng.lng}
+                      </Typography>
+                    </Grid>
+                    {/* Right Column (Empty) */}
+                    <Grid item xs={6}>
+                      <Typography>
+                        <span style={{ fontWeight: "bold" }}>Total GDP:</span>{" "}
+                        {clickedLatLng.lng}
+                      </Typography>
+                      <Typography>
+                        <span style={{ fontWeight: "bold" }}>
+                          GDP Per capita:
+                        </span>{" "}
+                        {clickedLatLng.lng}
+                      </Typography>
+                      <Typography>
+                        <span style={{ fontWeight: "bold" }}>GDP Growth:</span>{" "}
+                        {clickedLatLng.lng}
+                      </Typography>
+                      <Typography>
+                        <span style={{ fontWeight: "bold" }}>
+                          Total Population:
+                        </span>{" "}
+                        {clickedLatLng.lng}
+                      </Typography>
+                      <Typography>
+                        <span style={{ fontWeight: "bold" }}>
+                          Population Growth:
+                        </span>{" "}
+                        {clickedLatLng.lng}
+                      </Typography>
+                    </Grid>
+                  </Grid>
+                </>
+              ) : (
+                <Skeleton variant="rectangular" width={340} height={400} />
+              )}
             </>
           )}
-          <Button onClick={closeModal} sx={{ mt: 2 }}>
+          <Button
+            onClick={closeModal}
+            sx={{ mt: 2, color: "green", fontWeight: 700 }}
+          >
             Close
           </Button>
         </Box>

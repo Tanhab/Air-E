@@ -10,7 +10,6 @@ const { default: axios } = require('axios');
 
 const autoComplete = catchAsync(async (req, res) => {
   let result = await searchService.autoComplete(req.query.keyword);
-  result = result.map((e) => e.name);
   res.send(result);
 });
 
@@ -34,7 +33,6 @@ const searchByLatLng = catchAsync(async (req, res) => {
 
   const countryName = geoData.properties.country;
   const cityName = geoData.properties.city || geoData.properties.county || geoData.properties.suburb;
- 
 
   let population_data = await getPopulationData(countryName);
 
