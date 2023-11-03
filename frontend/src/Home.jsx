@@ -5,8 +5,7 @@ import mapboxgl from "mapbox-gl";
 
 import Navbar from "./components/navbar";
 
-mapboxgl.accessToken =
-  "pk.eyJ1Ijoic2Fnb3I2MCIsImEiOiJjbG9pNTdpMTAxbWFtMmpvMnE2dGo3djZjIn0.z9uW5JHfe94loTqZDVQtGw";
+mapboxgl.accessToken = import.meta.env.VITE_MAPBOX_TOKEN
 
 export default function Home() {
   const theme = useTheme();
@@ -16,6 +15,7 @@ export default function Home() {
   const [lat, setLat] = useState(42.35);
   const [zoom, setZoom] = useState(9);
 
+  console.log(import.meta.env.VITE_MAPBOX_TOKEN)
   useEffect(() => {
     if (map.current) return; // initialize map only once
     map.current = new mapboxgl.Map({
