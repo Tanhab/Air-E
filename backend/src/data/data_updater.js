@@ -2,10 +2,9 @@ const country_codes = require('./country_codes.json');
 const countryNames = Object.keys(country_codes);
 const mt = require('closest-match');
 const axios = require('axios');
-const {City, Country } = require('../models');
+const { City, Country } = require('../models');
 const config = require('../config/config');
-const fs =require('fs');
-
+const fs = require('fs');
 
 const indicators = {
   population: 'SP.POP.TOTL',
@@ -34,33 +33,30 @@ async function getPopulationData(countryName) {
 async function updatePopulationData() {
   const cursor = Country.find().cursor();
   const promises = [];
-  let cnt =0;
-  let errCnt=0;
-  const populationData=[];
+  let cnt = 0;
+  let errCnt = 0;
+  const populationData = [];
 
   for (let doc = await cursor.next(); doc != null; doc = await cursor.next()) {
     try {
       const data = await getPopulationData(doc.name);
       promises.push(Country.findByIdAndUpdate(doc.id, { ...data, updated: Math.floor(Date.now() / 1000) }));
-      
-      populationData.push({code:country_codes[doc.name],...data});
+
+      populationData.push({ code: country_codes[doc.name], ...data });
       cnt++;
     } catch (e) {
       errCnt++;
       console.log(e);
     }
 
-    if(cnt%20==0){
-      
-      console.log("population data Crawler, err: ", errCnt, " ok: ", cnt);
+    if (cnt % 20 == 0) {
+      console.log('population data Crawler, err: ', errCnt, ' ok: ', cnt);
     }
   }
 
   await Promise.all(promises);
 
   fs.writeFileSync('population_data.json', JSON.stringify(populationData));
-
-  
 }
 
 async function getAirData(lat, lng) {
@@ -84,35 +80,42 @@ function delay(ms) {
 
 async function updateAirData() {
 
-  const airData = [];
-  let cnt =0 ;
-  let errCnt= 0;
+  let cnt = 0;
+  let errCnt = 0;
 
-  const cursor = City.find().cursor();
+  const cursor = City.find({ 'air.aqi': { $eq: null } }).cursor();
+  
+
+  const promises = [];
+
   for (let doc = await cursor.next(); doc != null; doc = await cursor.next()) {
     try {
       const data = await getAirData(doc.lat, doc.lng);
 
-      if(doc.air.aqi){
+      if (doc.air.aqi) {
         cnt++;
         continue;
       }
 
-      await City.findByIdAndUpdate(doc.id, { air: { ...data } });
+      const prm =  City.findByIdAndUpdate(doc.id, { air: { ...data } });
+      promises.push(prm);
 
       cnt++;
-      airData.push({lat:doc.lat, lng:doc.lng, ...data});
+   
     } catch (e) {
-      console.log(e)
+      console.log(e);
       errCnt++;
     }
 
-    if(cnt%100==0){
-      console.log("Air Data crawler. err: ", errCnt, " ok: ", cnt);
+    if (cnt % 100 == 0) {
+      console.log('Air Data crawler. err: ', errCnt, ' ok: ', cnt);
+      await Promise.all(promises);
     }
+
     await delay(400);
   }
-  fs.watchFile('air_data.json', JSON.stringify(airData));
+
+
 }
 
 module.exports = {
