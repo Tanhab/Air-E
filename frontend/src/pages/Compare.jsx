@@ -38,7 +38,7 @@ const suggestion = [
 
 export default function Compare() {
   const theme = useTheme();
-  theme.palette.primary.main = "#87CEEB";
+  theme.palette.primary.main = "#2596be";
 
   const handleOnSearch = (string, results) => {
     console.log(string, results);
@@ -67,6 +67,8 @@ export default function Compare() {
   const addColumn = () => {
     setColumnCount(columnCount + 1);
   };
+
+
 
   return (
     <>
@@ -112,7 +114,7 @@ export default function Compare() {
         >
           Compare on Air Quality
         </Typography>
-
+        <button style={{float:"right",marginTop:10, fontWeight:700}} onClick={addColumn}>Add Another Location</button>
         {/* Step 3: Render the additional columns based on columnCount */}
         <TableContainer component={Paper}>
           <Table sx={{ minWidth: 650 }} aria-label="simple table">
@@ -159,8 +161,7 @@ export default function Compare() {
           </Table>
         </TableContainer>
 
-        {/* Step 4: Button to add a column */}
-        <button onClick={addColumn}>Add Column</button>
+       
       </Container>
     </>
   );

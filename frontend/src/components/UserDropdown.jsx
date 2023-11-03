@@ -1,6 +1,6 @@
 // ** React Imports
 import { useState, Fragment } from "react";
-
+import { Link, useNavigate } from "react-router-dom";
 // ** MUI Imports
 import Box from "@mui/material/Box";
 import Menu from "@mui/material/Menu";
@@ -17,6 +17,7 @@ import SettingsIcon from "@mui/icons-material/Settings";
 import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
 import LiveHelpIcon from "@mui/icons-material/LiveHelp";
 import LogoutIcon from "@mui/icons-material/Logout";
+
 
 // ** Styled Components
 const BadgeContentSpan = styled("span")(({ theme }) => ({
@@ -40,7 +41,7 @@ const UserDropdown = (props) => {
 
   const handleDropdownClose = (url) => {
     // if (url) {
-    //   router.push(url)
+    //   navigate("/home");
     // }
     setAnchorEl(null);
   };
@@ -64,6 +65,8 @@ const UserDropdown = (props) => {
     // logout()
     // handleDropdownClose()
   };
+
+  const navigate = useNavigate();
 
   return (
     <Fragment>
@@ -107,7 +110,7 @@ const UserDropdown = (props) => {
         <Divider sx={{ mt: "0 !important" }} />
         <MenuItem
           sx={{ p: 0 }}
-          onClick={() => handleDropdownClose("/pages/user-profile/profile")}
+          onClick={() =>  navigate("/compare")}
         >
           <Box sx={styles}>
             <FaceIcon />
