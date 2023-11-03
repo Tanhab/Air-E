@@ -2,9 +2,11 @@ const country_codes = require('./country_codes.json');
 const countryNames = Object.keys(country_codes);
 const mt = require('closest-match');
 const axios = require('axios');
-const { Country } = require('../models');
+const {City, Country } = require('../models');
 const config = require('../config/config');
 const fs =require('fs');
+
+
 const indicators = {
   population: 'SP.POP.TOTL',
   population_growth: 'SP.POP.GROW',
@@ -41,13 +43,15 @@ async function updatePopulationData() {
       const data = await getPopulationData(doc.name);
       promises.push(Country.findByIdAndUpdate(doc.id, { ...data, updated: Math.floor(Date.now() / 1000) }));
       
-      populationData.push({code:country_codes[code.name],...data});
+      populationData.push({code:country_codes[doc.name],...data});
       cnt++;
     } catch (e) {
       errCnt++;
+      console.log(e);
     }
 
     if(cnt%20==0){
+      
       console.log("population data Crawler, err: ", errCnt, " ok: ", cnt);
     }
   }
@@ -98,6 +102,7 @@ async function updateAirData() {
       cnt++;
       airData.push({lat:doc.lat, lng:doc.lng, ...data});
     } catch (e) {
+      console.log(e)
       errCnt++;
     }
 
@@ -108,6 +113,7 @@ async function updateAirData() {
   }
 
   await Promise.all(promises);
+  fs.watchFile('air_data.json', JSON.stringify(airData));
 }
 
 module.exports = {
