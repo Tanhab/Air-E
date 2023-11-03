@@ -4,7 +4,7 @@ import mapboxgl from "mapbox-gl";
 import styles from "../styles/Home.module.css";
 import Navbar from "../components/navbar";
 import Modal from "@mui/material/Modal";
-
+import { useRecoilState } from "recoil";
 import {
   Box,
   Button,
@@ -19,6 +19,8 @@ import {
   Grid,
   Skeleton,
 } from "@mui/material";
+import cityAtom from "../atoms/cityAtom";
+import {getDataByName,getDataByLngLat} from "../api/searchApi";
 
 mapboxgl.accessToken = import.meta.env.VITE_MAPBOX_TOKEN;
 
@@ -26,16 +28,14 @@ export default function Home() {
   const theme = useTheme();
   const mapContainer = useRef(null);
   const map = useRef(null);
-  const [lng, setLng] = useState(-70.9);
-  const [lat, setLat] = useState(42.35);
-  const [zoom, setZoom] = useState(2);
   const [mapBounds, setMapBounds] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [clickedLatLng, setClickedLatLng] = useState(null);
   const [showSidebar, setShowSidebar] = useState(false);
   const [markers, setMarkers] = useState([]);
   const [loading, setLoading] = useState(false);
-
+  const [city, setCity] = useRecoilState(cityAtom)
+  const [modalData, setModalData] = useState({})
+  
   const dummyData = [
     { rank: 1, city: "City 1", aqi: 20 },
     { rank: 2, city: "City 2", aqi: 30 },
@@ -49,23 +49,43 @@ export default function Home() {
     { rank: 2, city: "City 2", aqi: 30 },
     // Add more dummy data for 10 rows
   ];
+
+  useEffect(()=> {
+    
+    async function fetchData(){
+    if(city !== null){
+      let data = await getDataByName(city)
+      console.log(data)
+      if(!data.error){
+      setModalData(data)
+      setIsModalOpen(true)
+      map.current.flyTo({
+        center : [data.lng, data.lat],
+        essential: true,
+        zoom: 7,
+        speed: 0.8,
+  
+      })
+    }
+      else{
+        console.log(data)
+      }
+    }else closeModal()
+  }
+  fetchData()
+  },[city,map])
   useEffect(() => {
     if (!map.current) {
       map.current = new mapboxgl.Map({
         container: mapContainer.current,
         style: "mapbox://styles/sagor60/cloialudf003j01prgw21f3jd",
-        center: [lng, lat],
-        zoom: zoom,
+        center: [-70.9, 42.35],
+        zoom: 2,
       });
 
-      map.current.on("moveend", () => {
-        // When the map moves or zooms, update the map bounds
-        const bounds = map.current.getBounds();
-        console.log(bounds);
-        setMapBounds(bounds);
-      });
+      
 
-      map.current.on("click", (e) => {
+      map.current.on("click", async (e) => {
         const { lng, lat } = e.lngLat;
 
         // Create a new marker object
@@ -75,20 +95,42 @@ export default function Home() {
 
         // Store the marker data in the state
         setMarkers((prevMarkers) => [...prevMarkers, { lat, lng }]);
-
-        // Open the modal
-        openModal(lat, lng);
+        setIsModalOpen(true)
+        setLoading(true)
+        let data = await getDataByLngLat(lat,lng)
+        console.log(data)
+        if(!data.error){
+          setLoading(false)
+        setModalData(data)
+       
+        // map.current.flyTo({
+        //   center : [data.lng, data.lat],
+        //   essential: true,
+        //   zoom: 7,
+        //   speed: 0.8,
+    
+        //   })
+        }else{
+          setIsModalOpen(false)
+          setLoading(false)
+            console.log(data)
+          }
+        
       });
     }
-  }, [lng, lat, zoom]);
+  }, [map]);
 
-  const openModal = (lat, lng) => {
-    setClickedLatLng({ lat, lng });
+  const openModal = () => {
+    //setClickedLatLng({ lat, lng });
     setIsModalOpen(true);
+    console.log(map)
+    
   };
 
   const closeModal = () => {
     setIsModalOpen(false);
+    setModalData({})
+    setCity(null)
   };
 
   const toggleSidebar = (event) => {
@@ -259,7 +301,7 @@ export default function Home() {
             p: 4,
           }}
         >
-          {clickedLatLng && (
+          {modalData && (
             <>
               {!loading ? (
                 <>
@@ -267,67 +309,67 @@ export default function Home() {
                     <Grid item xs={12}>
                       <Typography>
                         <span style={{ fontWeight: "bold" }}>Location:</span>{" "}
-                        {clickedLatLng.lat}
+                        {modalData.cityName}
                       </Typography>
                     </Grid>
                     {/* Left Column */}
                     <Grid item xs={6}>
                       <Typography>
                         <span style={{ fontWeight: "bold" }}>Latitude:</span>{" "}
-                        {clickedLatLng.lat}
+                        {modalData.lat}
                       </Typography>
                       <Typography>
                         <span style={{ fontWeight: "bold" }}>Longitude:</span>{" "}
-                        {clickedLatLng.lng}
+                        {modalData.lng}
                       </Typography>
                       <Typography>
                         <span style={{ fontWeight: "bold" }}>AQI:</span>{" "}
-                        {clickedLatLng.lng}
+                        {modalData.air?.aqi}
                       </Typography>
                       <Typography>
                         <span style={{ fontWeight: "bold" }}>
                           PM2.5 levels:
                         </span>{" "}
-                        {clickedLatLng.lng}
+                        {modalData.air?.pm2_5}
                       </Typography>
                       <Typography>
                         <span style={{ fontWeight: "bold" }}>PM10 levels:</span>{" "}
-                        {clickedLatLng.lng}
+                        {modalData.air?.pm10}
                       </Typography>
                       <Typography>
                         <span style={{ fontWeight: "bold" }}>
                           Ozone Levels:
                         </span>{" "}
-                        {clickedLatLng.lng}
+                        {modalData.air?.o3}
                       </Typography>
                     </Grid>
                     {/* Right Column (Empty) */}
                     <Grid item xs={6}>
                       <Typography>
                         <span style={{ fontWeight: "bold" }}>Total GDP:</span>{" "}
-                        {clickedLatLng.lng}
+                        {modalData.gdp}
                       </Typography>
                       <Typography>
                         <span style={{ fontWeight: "bold" }}>
                           GDP Per capita:
                         </span>{" "}
-                        {clickedLatLng.lng}
+                        {modalData.gdp_per_capita}
                       </Typography>
                       <Typography>
                         <span style={{ fontWeight: "bold" }}>GDP Growth:</span>{" "}
-                        {clickedLatLng.lng}
+                        {modalData.gdp_growth}
                       </Typography>
                       <Typography>
                         <span style={{ fontWeight: "bold" }}>
                           Total Population:
                         </span>{" "}
-                        {clickedLatLng.lng}
+                        {modalData.population}
                       </Typography>
                       <Typography>
                         <span style={{ fontWeight: "bold" }}>
                           Population Growth:
                         </span>{" "}
-                        {clickedLatLng.lng}
+                        {modalData.population_growth}
                       </Typography>
                     </Grid>
                   </Grid>
