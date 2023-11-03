@@ -1,11 +1,10 @@
-
-
 const country_codes = require('./country_codes.json');
 const countryNames = Object.keys(country_codes);
 const mt = require('closest-match');
 const axios = require('axios');
 const { Country } = require('../models');
 const config = require('../config/config');
+const fs =require('fs');
 const indicators = {
   population: 'SP.POP.TOTL',
   population_growth: 'SP.POP.GROW',
@@ -33,13 +32,31 @@ async function getPopulationData(countryName) {
 async function updatePopulationData() {
   const cursor = Country.find().cursor();
   const promises = [];
-  for (let doc = await cursor.next(); doc != null; doc = await cursor.next()) {
-    const data = await getPopulationData(doc.name);
+  let cnt =0;
+  let errCnt=0;
+  const populationData=[];
 
-    promises.push(Country.findByIdAndUpdate(doc.id, { ...data, updated: Math.floor(Date.now() / 1000) }));
+  for (let doc = await cursor.next(); doc != null; doc = await cursor.next()) {
+    try {
+      const data = await getPopulationData(doc.name);
+      promises.push(Country.findByIdAndUpdate(doc.id, { ...data, updated: Math.floor(Date.now() / 1000) }));
+      
+      populationData.push({code:country_codes[code.name],...data});
+      cnt++;
+    } catch (e) {
+      errCnt++;
+    }
+
+    if(cnt%20==0){
+      console.log("population data Crawler, err: ", errCnt, " ok: ", cnt);
+    }
   }
 
   await Promise.all(promises);
+
+  fs.writeFileSync('population_data.json', JSON.stringify(populationData));
+
+  
 }
 
 async function getAirData(lat, lng) {
@@ -63,6 +80,9 @@ function delay(ms) {
 
 async function updateAirData() {
   let promises = [];
+  const airData = [];
+  let cnt =0 ;
+  let errCnt= 0;
 
   const cursor = City.find().cursor();
   for (let doc = await cursor.next(); doc != null; doc = await cursor.next()) {
@@ -74,17 +94,25 @@ async function updateAirData() {
         await Promise.all(promises);
         promises = [];
       }
-    } catch (e) {}
+
+      cnt++;
+      airData.push({lat:doc.lat, lng:doc.lng, ...data});
+    } catch (e) {
+      errCnt++;
+    }
+
+    if(cnt%100==0){
+      console.log("Air Data crawler. err: ", errCnt, " ok: ", cnt);
+    }
     await delay(700);
   }
 
   await Promise.all(promises);
 }
 
-
 module.exports = {
-    updateAirData,
-    updatePopulationData,
-    getAirData,
-    getPopulationData,
-}
+  updateAirData,
+  updatePopulationData,
+  getAirData,
+  getPopulationData,
+};
