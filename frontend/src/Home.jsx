@@ -4,10 +4,8 @@ import { styled, useTheme } from "@mui/material/styles";
 import mapboxgl from "mapbox-gl";
 import styles from "./styles/Home.module.css";
 import Navbar from "./components/navbar";
-import TextField from "@mui/material/TextField";
-import IconButton from "@mui/material/IconButton";
-import SearchIcon from "@mui/icons-material/Search";
-import { InputAdornment } from "@mui/material";
+import Modal from "@mui/material/Modal";
+import { Box, Typography, Button } from "@mui/material";
 
 mapboxgl.accessToken = import.meta.env.VITE_MAPBOX_TOKEN;
 
@@ -19,7 +17,11 @@ export default function Home() {
   const [lat, setLat] = useState(42.35);
   const [zoom, setZoom] = useState(2);
   const [mapBounds, setMapBounds] = useState(null);
-  const [searchValue, setSearchValue] = useState("");
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [clickedLatLng, setClickedLatLng] = useState(null);
+  const [modalPosition, setModalPosition] = useState({ top: 0, left: 0 });
+  const [isRankModalOpen, setIsRankModalOpen] = useState(false);
+  const [listData, setListData] = useState([]);
 
   useEffect(() => {
     if (!map.current) {
@@ -38,18 +40,24 @@ export default function Home() {
       });
 
       map.current.on("click", (e) => {
-        console.log("CLICKED");
-        const features = map.queryRenderedFeatures(e.point, {
-          layers: ["country-fills"],
-        });
-        if (!features.length) return;
-        const { properties } = features[0];
-        const { property, description } = activeRef.current;
-        alert(`(${properties.name}) ${properties[property]} ${description}`);
+        console.log(e.lngLat);
+        openModal(e.lngLat.lat, e.lngLat.lng);
       });
     }
   }, [lng, lat, zoom]);
 
+  const openModal = (lat, lng) => {
+    setClickedLatLng({ lat, lng });
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
+
+  const openRankModal = () => {
+    setIsRankModalOpen(true);
+  };
 
   return (
     <>
@@ -57,6 +65,7 @@ export default function Home() {
 
       <div className={styles.container}>
         <div className={styles.mapcontainer} ref={mapContainer} />
+
         {/* {mapBounds && (
           <div>
             <p>Map Bounds:</p>
@@ -66,7 +75,52 @@ export default function Home() {
             <p>Bottom Right (Longitude): {mapBounds.getEast()}</p>
           </div>
         )} */}
+        <img
+          src="/trophy.png"
+          height={50}
+          width={50}
+          alt=""
+          className={styles.searchBar}
+        />
       </div>
+
+      <Modal
+        open={isModalOpen}
+        onClose={closeModal}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box
+          sx={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            width: 400,
+            bgcolor: "background.paper",
+            border: "2px solid #000",
+            boxShadow: 24,
+            p: 4,
+          }}
+        >
+          {clickedLatLng && (
+            <>
+              <Typography id="modal-modal-title" variant="h6" component="h2">
+                Clicked Coordinates
+              </Typography>
+              <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+                Latitude: {clickedLatLng.lat}
+              </Typography>
+              <Typography sx={{ mt: 2 }}>
+                Longitude: {clickedLatLng.lng}
+              </Typography>
+            </>
+          )}
+          <Button onClick={closeModal} sx={{ mt: 2 }}>
+            Close
+          </Button>
+        </Box>
+      </Modal>
     </>
   );
 }

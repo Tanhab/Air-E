@@ -68,10 +68,8 @@ const UserDropdown = (props) => {
   return (
     <Fragment>
       <Badge
-        overlap="circular"
         onClick={handleDropdownOpen}
         sx={{ ml: 2, cursor: "pointer" }}
-        badgeContent={<BadgeContentSpan />}
         anchorOrigin={{
           vertical: "bottom",
           horizontal: "right",
@@ -81,7 +79,7 @@ const UserDropdown = (props) => {
           alt="John Doe"
           onClick={handleDropdownOpen}
           sx={{ width: 40, height: 40 }}
-          src="/1.png"
+          src="/menu.png"
         />
       </Badge>
       <Menu
@@ -92,20 +90,7 @@ const UserDropdown = (props) => {
       >
         <Box sx={{ pt: 2, pb: 3, px: 4 }}>
           <Box sx={{ display: "flex", alignItems: "center" }}>
-            <Badge
-              overlap="circular"
-              badgeContent={<BadgeContentSpan />}
-              anchorOrigin={{
-                vertical: "bottom",
-                horizontal: "right",
-              }}
-            >
-              <Avatar
-                alt="John Doe"
-                src="1.png"
-                sx={{ width: "2.5rem", height: "2.5rem" }}
-              />
-            </Badge>
+          
             <Box
               sx={{
                 display: "flex",
@@ -114,13 +99,8 @@ const UserDropdown = (props) => {
                 flexDirection: "column",
               }}
             >
-              <Typography sx={{ fontWeight: 600 }}>John Doe</Typography>
-              <Typography
-                variant="body2"
-                sx={{ fontSize: "0.8rem", color: "text.disabled" }}
-              >
-                Admin
-              </Typography>
+              <Typography sx={{ fontWeight: 600 }}>Menu</Typography>
+            
             </Box>
           </Box>
         </Box>
@@ -131,7 +111,7 @@ const UserDropdown = (props) => {
         >
           <Box sx={styles}>
             <FaceIcon />
-            Profile
+            Compare
           </Box>
         </MenuItem>
         <MenuItem
@@ -140,7 +120,7 @@ const UserDropdown = (props) => {
         >
           <Box sx={styles}>
             <InboxIcon />
-            Inbox
+            Past History
           </Box>
         </MenuItem>
         <MenuItem
@@ -149,48 +129,10 @@ const UserDropdown = (props) => {
         >
           <Box sx={styles}>
             <ChatIcon />
-            Chat
+            ChatBot
           </Box>
         </MenuItem>
-        <Divider />
-        <MenuItem
-          sx={{ p: 0 }}
-          onClick={() => handleDropdownClose("/pages/account-settings/account")}
-        >
-          <Box sx={styles}>
-            <SettingsIcon />
-            Settings
-          </Box>
-        </MenuItem>
-        <MenuItem
-          sx={{ p: 0 }}
-          onClick={() => handleDropdownClose("/pages/pricing")}
-        >
-          <Box sx={styles}>
-            <AttachMoneyIcon />
-            Pricing
-          </Box>
-        </MenuItem>
-        <MenuItem
-          sx={{ p: 0 }}
-          onClick={() => handleDropdownClose("/pages/faq")}
-        >
-          <Box sx={styles}>
-            <LiveHelpIcon />
-            FAQ
-          </Box>
-        </MenuItem>
-        <Divider />
-        <MenuItem
-          onClick={handleLogout}
-          sx={{
-            py: 2,
-            "& svg": { mr: 2, fontSize: "1.375rem", color: "text.primary" },
-          }}
-        >
-          <LogoutIcon />
-          Logout
-        </MenuItem>
+      
       </Menu>
     </Fragment>
   );

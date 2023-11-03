@@ -16,7 +16,7 @@ const LinkStyled = styled(Link)(({ theme }) => ({
   marginRight: theme.spacing(8),
 }));
 
-export default function Navbar() {
+export default function Landing() {
   const theme = useTheme();
   theme.palette.primary.main = "#976BCF";
   const defaultOptions = {

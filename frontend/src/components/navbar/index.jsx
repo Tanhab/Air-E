@@ -341,7 +341,7 @@ export default function Navbar() {
             className="actions-right"
             sx={{ display: "flex", alignItems: "center" }}
           >
-            <NotificationDropdown />
+            {/* <NotificationDropdown /> */}
             <UserDropdown />
           </Box>
         </Toolbar>

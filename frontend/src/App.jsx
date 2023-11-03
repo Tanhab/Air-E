@@ -4,6 +4,8 @@ import Home from "./Home";
 import Landing from "./Landing";
 import MapTest from "./pages/MapTest";
 import HeatMapTest from "./pages/HeatMapTest.jsx";
+import Compare from "./Compare";
+
 
 function App() {
 
@@ -16,6 +18,9 @@ function App() {
               <Route path="/home" element={<Home/>} />
               <Route path="/maptest" element={<MapTest />}/>
               <Route path="/heatmaptest" element={<HeatMapTest />}/>
+              <Route path="/compare" element={<Compare/>}/>
+
+            
             </Routes>
         
         </BrowserRouter>
