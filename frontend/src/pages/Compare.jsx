@@ -11,7 +11,7 @@ import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 import { Container, Typography } from "@mui/material";
 import { styled, useTheme } from "@mui/material/styles";
-import themeConfig from "../src/configs/themeConfig";
+import themeConfig from "../configs/themeConfig";
 import { ReactSearchAutocomplete } from "react-search-autocomplete";
 
 const LinkStyled = styled(Link)(({ theme }) => ({
@@ -118,7 +118,9 @@ export default function Compare() {
           <Table sx={{ minWidth: 650 }} aria-label="simple table">
             <TableHead>
               <TableRow>
-                <TableCell sx={{ width: "200px" }}>Location Comparison</TableCell>
+                <TableCell sx={{ width: "200px" }}>
+                  Location Comparison
+                </TableCell>
                 {Array.from({ length: columnCount }).map((_, index) => (
                   <TableCell key={index} align="right">
                     <ReactSearchAutocomplete
@@ -147,7 +149,9 @@ export default function Compare() {
                 >
                   <TableCell>{row.name}</TableCell>
                   {Array.from({ length: columnCount }).map((_, index) => (
-                    <TableCell key={index}>{/* Add cell data here */}</TableCell>
+                    <TableCell key={index}>
+                      {/* Add cell data here */}
+                    </TableCell>
                   ))}
                 </TableRow>
               ))}

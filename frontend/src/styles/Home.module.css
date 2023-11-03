@@ -12,9 +12,59 @@
       
       .searchBar {
         position: absolute;
-        bottom: 100px;
+        top: 50px;
         left: 50px;
         z-index: 1;
       }
       
       body { margin : 0 }
+
+      .overlay {
+        display: flex;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 100;
+        background-color: rgba(0, 0, 0, 0.5);
+        -webkit-tap-highlight-color: transparent;
+      }
+      
+      .fill {
+        flex: 1;
+        background: transparent;
+      }
+      
+      .drawer {
+        height: 100%;
+        background-color: #ffffff;
+      }
+
+
+      .sidebarOpen {
+        position: absolute;
+        width: 350px; /* Set your desired width */
+        z-index: 100;
+        height: 100%;
+        background-color: #87CEEB; /* Background color of the sidebar */
+        box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2); /* Add shadow for a raised effect */
+        transform: translateX(0); /* Show the sidebar by translating it from the left */
+        transition: transform 0.3s ease-in-out; /* Add a smooth transition effect */
+      }
+      
+      .sidebarClosed {
+        position: absolute;
+        width: 0; /* Hide the sidebar by setting the width to 0 */
+        height: 100%;
+        background-color: #fff; /* Background color of the sidebar */
+        box-shadow: none; /* No shadow when closed */
+        transform: translateX(-100%); /* Hide the sidebar by translating it off-screen to the left */
+        transition: transform 0.3s ease-in-out; /* Add a smooth transition effect */
+      }
+
+
+      .closeButton {
+        color: black;
+        float: right;
+      }

@@ -5,9 +5,9 @@ import Toolbar from "@mui/material/Toolbar";
 import { Container, Grid, Typography, Button } from "@mui/material";
 import { styled, useTheme } from "@mui/material/styles";
 import Lottie from "react-lottie";
-import animationData from "./lotties/earth.json";
+import animationData from "../lotties/earth.json";
 
-import themeConfig from "../src/configs/themeConfig";
+import themeConfig from "../configs/themeConfig";
 
 const LinkStyled = styled(Link)(({ theme }) => ({
   display: "flex",
@@ -61,20 +61,19 @@ export default function Landing() {
         </Toolbar>
       </AppBar>
 
-      <Container >
-      <Lottie options={defaultOptions} height={500} width={500} />
-      <Button
-             
-             size="large"
-             type="submit"
-             variant="contained"
-             sx={{ mt: 7, bgcolor: "#976BCF", fontWeight:700 }}
-             onClick={()=> {
-               navigate("/home")
-             }}
-           >
-            Explore
-           </Button>
+      <Container>
+        <Lottie options={defaultOptions} height={500} width={500} />
+        <Button
+          size="large"
+          type="submit"
+          variant="contained"
+          sx={{ mt: 7, bgcolor: "#976BCF", fontWeight: 700 }}
+          onClick={() => {
+            navigate("/home");
+          }}
+        >
+          Explore
+        </Button>
         {/* <Grid container spacing={5} sx={{ mt: 4 }} justifyContent="center">
           <Grid item xs={6}>
             <Typography

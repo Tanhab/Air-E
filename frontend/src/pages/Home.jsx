@@ -1,11 +1,10 @@
 import React, { useRef, useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
 import { styled, useTheme } from "@mui/material/styles";
 import mapboxgl from "mapbox-gl";
-import styles from "./styles/Home.module.css";
-import Navbar from "./components/navbar";
+import styles from "../styles/Home.module.css";
+import Navbar from "../components/navbar";
 import Modal from "@mui/material/Modal";
-import { Box, Typography, Button } from "@mui/material";
+import { Box, Button, Typography } from "@mui/material";
 
 mapboxgl.accessToken = import.meta.env.VITE_MAPBOX_TOKEN;
 
@@ -19,9 +18,7 @@ export default function Home() {
   const [mapBounds, setMapBounds] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [clickedLatLng, setClickedLatLng] = useState(null);
-  const [modalPosition, setModalPosition] = useState({ top: 0, left: 0 });
-  const [isRankModalOpen, setIsRankModalOpen] = useState(false);
-  const [listData, setListData] = useState([]);
+  const [showSidebar, setShowSidebar] = useState(false);
 
   useEffect(() => {
     if (!map.current) {
@@ -55,8 +52,12 @@ export default function Home() {
     setIsModalOpen(false);
   };
 
-  const openRankModal = () => {
-    setIsRankModalOpen(true);
+  const toggleSidebar = () => {
+    setShowSidebar(!showSidebar);
+  };
+
+  const handleSidebarClick = (event) => {
+    event.stopPropagation();
   };
 
   return (
@@ -64,24 +65,59 @@ export default function Home() {
       <Navbar />
 
       <div className={styles.container}>
-        <div className={styles.mapcontainer} ref={mapContainer} />
+        {!showSidebar ? (
+          <img
+            src="/trophy.png"
+            height={50}
+            width={50}
+            alt=""
+            style={{ zIndex: 101 }}
+            className={styles.searchBar}
+            onClick={toggleSidebar}
+          />
+        ) : null}
 
-        {/* {mapBounds && (
-          <div>
-            <p>Map Bounds:</p>
-            <p>Top Left (Latitude): {mapBounds.getNorth()}</p>
-            <p>Top Left (Longitude): {mapBounds.getWest()}</p>
-            <p>Bottom Right (Latitude): {mapBounds.getSouth()}</p>
-            <p>Bottom Right (Longitude): {mapBounds.getEast()}</p>
+        {showSidebar && (
+          <div className={styles.sidebarOpen} onClick={handleSidebarClick}>
+            <Button
+              sx={{ color: "black" }}
+              className={styles.closeButton}
+              onClick={toggleSidebar}
+            >
+              Close
+            </Button>
+            <br></br>
+
+            <Typography
+          variant="h5"
+          sx={{
+            fontWeight: 700,
+            color: "white",
+            marginLeft:2,
+            mb: 5,
+          }}
+        >
+         Top 10 clean cities
+        </Typography>
+
           </div>
-        )} */}
-        <img
-          src="/trophy.png"
-          height={50}
-          width={50}
-          alt=""
-          className={styles.searchBar}
-        />
+        )}
+
+        <div
+          className={styles.mapcontainer}
+          ref={mapContainer}
+          onClick={toggleSidebar}
+        >
+          {mapBounds && (
+            <div>
+              <p>Map Bounds:</p>
+              <p>Top Left (Latitude): {mapBounds.getNorth()}</p>
+              <p>Top Left (Longitude): {mapBounds.getWest()}</p>
+              <p>Bottom Right (Latitude): {mapBounds.getSouth()}</p>
+              <p>Bottom Right (Longitude): {mapBounds.getEast()}</p>
+            </div>
+          )}
+        </div>
       </div>
 
       <Modal
