@@ -83,7 +83,7 @@ function delay(ms) {
 }
 
 async function updateAirData() {
-  let promises = [];
+
   const airData = [];
   let cnt =0 ;
   let errCnt= 0;
@@ -92,12 +92,13 @@ async function updateAirData() {
   for (let doc = await cursor.next(); doc != null; doc = await cursor.next()) {
     try {
       const data = await getAirData(doc.lat, doc.lng);
-      promises.push(City.findByIdAndUpdate(doc.id, { air: { ...data } }));
 
-      if (promises.length > 2000) {
-        await Promise.all(promises);
-        promises = [];
+      if(doc.air.aqi){
+        cnt++;
+        continue;
       }
+
+      await City.findByIdAndUpdate(doc.id, { air: { ...data } });
 
       cnt++;
       airData.push({lat:doc.lat, lng:doc.lng, ...data});
@@ -109,10 +110,8 @@ async function updateAirData() {
     if(cnt%100==0){
       console.log("Air Data crawler. err: ", errCnt, " ok: ", cnt);
     }
-    await delay(700);
+    await delay(400);
   }
-
-  await Promise.all(promises);
   fs.watchFile('air_data.json', JSON.stringify(airData));
 }
 

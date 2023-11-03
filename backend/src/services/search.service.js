@@ -7,7 +7,7 @@ const ApiError = require('../utils/ApiError');
  * @returns array of objects of form {name:'_matched_}
  */
 const autoComplete = async (keyword) => {
-  console.log(keyword);
+ 
   const cities = await City.aggregate([
     {
       $match: {
