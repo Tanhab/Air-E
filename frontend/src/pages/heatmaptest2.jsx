@@ -6,6 +6,7 @@ import Optionsfield from "../components/OptionsField";
 import data from "../data/data.json";
 import { useRecoilState } from "recoil";
 import { flytoAtom } from "../atoms/flytoAtom";
+import { selectedPropertyAtom } from "../atoms/propertySelected";
 
 const options = [
     {
@@ -137,11 +138,12 @@ const HeatMapTest2 = () => {
   const [active, setActive] = useState(options[0]);
   const [mapState, setMapState] = useState(null);
   const [flyTo, setFlyTo] = useRecoilState(flytoAtom);
+  const [selectedProperty, setSelectedProperty] = useRecoilState(selectedPropertyAtom);
 
   useEffect(() => {
     if (flyTo) {
       mapState.flyTo({
-        center: [data.lng, data.lat],
+        center: [flyTo.lng, flyTo.lat],
         essential: true,
         zoom: 7,
         speed: 0.8,
@@ -323,6 +325,8 @@ const HeatMapTest2 = () => {
         "waterway-label"
       );
     }
+
+    setSelectedProperty({type:'air', property:active.property});
   }, [active]);
 
   const paint = () => {

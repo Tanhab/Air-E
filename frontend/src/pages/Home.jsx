@@ -23,10 +23,11 @@ import cityAtom from "../atoms/cityAtom";
 import {
   getDataByName,
   getDataByLngLat,
-  getRankingDataByAQI,
+  getRankingData,
 } from "../api/searchApi";
 import HeatMapTest2 from "./heatmaptest2";
 import { flytoAtom } from "../atoms/flytoAtom";
+import { selectedPropertyAtom } from "../atoms/propertySelected";
 
 mapboxgl.accessToken = import.meta.env.VITE_MAPBOX_TOKEN;
 
@@ -45,11 +46,14 @@ export default function Home() {
   const [modalData, setModalData] = useState({});
   const [best10Data, setBest10Data] = useState([]);
   const [worst10data, setWorst10Data] = useState([]);
-
+  const [selectedProperty, setSelectedProperty] =
+    useRecoilState(selectedPropertyAtom);
 
   useEffect(() => {
+    if (!selectedProperty) return;
+
     async function fetchData() {
-      let data = await getRankingDataByAQI();
+      let data = await getRankingData(selectedProperty);
       console.log(data);
       if (!data.error) {
         setBest10Data(data.topTen);
@@ -59,7 +63,7 @@ export default function Home() {
       }
     }
     fetchData();
-  }, []);
+  }, [selectedProperty]);
 
   useEffect(() => {
     async function fetchData() {
@@ -68,7 +72,7 @@ export default function Home() {
         console.log(data);
         if (!data.error) {
           setModalData(data);
-          setFlyTo({lng:data.lng, lat:data.lat})
+          setFlyTo({ lng: data.lng, lat: data.lat });
           setIsModalOpen(true);
         } else {
           console.log(data);
@@ -179,7 +183,7 @@ export default function Home() {
                 mb: 2,
               }}
             >
-              Top 10 Cleanest Cities
+              Top 10
             </Typography>
             <TableContainer component={Paper}>
               <Table>
@@ -188,8 +192,14 @@ export default function Home() {
                     <TableCell align="center" style={{ fontWeight: "bold" }}>
                       Rank
                     </TableCell>
-                    <TableCell style={{ fontWeight: "bold" }}>City</TableCell>
-                    <TableCell style={{ fontWeight: "bold" }}>AQI</TableCell>
+                    <TableCell style={{ fontWeight: "bold" }}>
+                      {selectedProperty?.type === "air" ? "City" : "Country"}
+                    </TableCell>
+                    <TableCell
+                      style={{ fontWeight: "bold", textTransform: "uppercase" }}
+                    >
+                      {selectedProperty?.property}
+                    </TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
@@ -221,7 +231,7 @@ export default function Home() {
                 mb: 2,
               }}
             >
-              Top 10 Polluted Cities
+              Last 10
             </Typography>
             <TableContainer component={Paper}>
               <Table>
@@ -230,8 +240,14 @@ export default function Home() {
                     <TableCell align="center" style={{ fontWeight: "bold" }}>
                       Rank
                     </TableCell>
-                    <TableCell style={{ fontWeight: "bold" }}>City</TableCell>
-                    <TableCell style={{ fontWeight: "bold" }}>AQI</TableCell>
+                    <TableCell style={{ fontWeight: "bold" }}>
+                      {selectedProperty?.type === "air" ? "City" : "Country"}
+                    </TableCell>
+                    <TableCell
+                      style={{ fontWeight: "bold", textTransform: "uppercase" }}
+                    >
+                      {selectedProperty?.property}
+                    </TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
@@ -256,22 +272,8 @@ export default function Home() {
           </div>
         )}
 
-        <HeatMapTest2/>
-        <div
-          className={styles.mapcontainer}
-          ref={mapContainer}
-          onClick={toggleSidebar}
-        >
-          {mapBounds && (
-            <div>
-              <p>Map Bounds:</p>
-              <p>Top Left (Latitude): {mapBounds.getNorth()}</p>
-              <p>Top Left (Longitude): {mapBounds.getWest()}</p>
-              <p>Bottom Right (Latitude): {mapBounds.getSouth()}</p>
-              <p>Bottom Right (Longitude): {mapBounds.getEast()}</p>
-            </div>
-          )}
-        </div>
+        <HeatMapTest2 />
+
         {markers.map((marker, index) => (
           <div
             key={index}
@@ -281,7 +283,6 @@ export default function Home() {
             {/* <img src="/flag.png" height={30} width={30} alt="" /> */}
           </div>
         ))}
-        
       </div>
 
       <Modal

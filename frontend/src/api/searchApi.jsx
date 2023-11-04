@@ -24,10 +24,11 @@ export const getDataByLngLat = async (lat, lng) => {
   }
 };
 
-export const getRankingDataByAQI = async () => {
+export const getRankingData = async (property) => {
+  const type = property.type==='air'? 'airQualityData':'populationData'
   try {
     const data = await axios.get(
-      `http://localhost:3000/v1/ranking/airQualityData?rankBy=aqi`
+      `http://localhost:3000/v1/ranking/${type}?rankBy=${property.property}`
     );
     return data.data;
   } catch (e) {
