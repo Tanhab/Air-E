@@ -5,8 +5,7 @@ import Optionsfield from "../components/OptionsField";
 // import './Map.css';
 import data from "../data/data.json";
 
-const HeatMapTest2 = () => {
-  const options = [
+const options = [
     {
       name: "AQI",
       description: "Estimated Air Quality Index",
@@ -22,7 +21,62 @@ const HeatMapTest2 = () => {
     },
     {
       name: "CO level",
-      description: "Estimated Carbon Mono level",
+      description: "Estimated Carbon Monoxide level",
+      property: "co",
+      stops: [
+        ["Good", "#AFE1AF"],
+        ["Moderate", "#FBEC5D"],
+        ["Unhealthy for sensitive", "#F28C28"],
+        ["Unhealthy", "#FF2400"],
+        ["Very Unhealthy", "#CF9FFF"],
+        ["Hazardous", "#800020"],
+      ],
+    },
+
+    {
+      name: "CO2 level",
+      description: "Estimated Carbon Dioxide level",
+      property: "co2",
+      stops: [
+        ["Good", "#AFE1AF"],
+        ["Moderate", "#FBEC5D"],
+        ["Unhealthy for sensitive", "#F28C28"],
+        ["Unhealthy", "#FF2400"],
+        ["Very Unhealthy", "#CF9FFF"],
+        ["Hazardous", "#800020"],
+      ],
+    },
+
+    {
+      name: "NO level",
+      description: "Estimated Nitro Monoxide level",
+      property: "no",
+      stops: [
+        ["Good", "#AFE1AF"],
+        ["Moderate", "#FBEC5D"],
+        ["Unhealthy for sensitive", "#F28C28"],
+        ["Unhealthy", "#FF2400"],
+        ["Very Unhealthy", "#CF9FFF"],
+        ["Hazardous", "#800020"],
+      ],
+    },
+    {
+      name: "N02 level",
+      description: "Estimated Nitrogen Dioxide level",
+      property: "no2",
+      stops: [
+        ["Good", "#AFE1AF"],
+        ["Moderate", "#FBEC5D"],
+        ["Unhealthy for sensitive", "#F28C28"],
+        ["Unhealthy", "#FF2400"],
+        ["Very Unhealthy", "#CF9FFF"],
+        ["Hazardous", "#800020"],
+      ],
+    },
+
+    {
+      name: "Ozone level",
+      description: "Estimated Ozone level",
       property: "o3",
       stops: [
         ["Good", "#AFE1AF"],
@@ -33,11 +87,10 @@ const HeatMapTest2 = () => {
         ["Hazardous", "#800020"],
       ],
     },
-    
     {
-      name: "Ozone level",
-      description: "Estimated Ozone level",
-      property: "o3",
+      name: "SO2 level",
+      description: "Estimated Sulfur dioxide level",
+      property: "so2",
       stops: [
         ["Good", "#AFE1AF"],
         ["Moderate", "#FBEC5D"],
@@ -74,8 +127,9 @@ const HeatMapTest2 = () => {
         ["Hazardous", "#800020"],
       ],
     },
-  
   ];
+const HeatMapTest2 = () => {
+ 
   const mapContainerRef = useRef(null);
   const [active, setActive] = useState(options[0]);
   const [mapState, setMapState] = useState(null);
@@ -84,7 +138,7 @@ const HeatMapTest2 = () => {
     const map = new mapboxgl.Map({
       container: mapContainerRef.current,
       // Choose from Mapbox's core styles, or make your own style with Mapbox Studio
-      style: "mapbox://styles/mapbox/streets-v12",
+      style:"mapbox://styles/sagor60/cloialudf003j01prgw21f3jd",
       center: [-120, 50],
       zoom: 2,
     });

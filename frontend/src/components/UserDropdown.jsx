@@ -18,7 +18,6 @@ import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
 import LiveHelpIcon from "@mui/icons-material/LiveHelp";
 import LogoutIcon from "@mui/icons-material/Logout";
 
-
 // ** Styled Components
 const BadgeContentSpan = styled("span")(({ theme }) => ({
   width: 8,
@@ -93,7 +92,6 @@ const UserDropdown = (props) => {
       >
         <Box sx={{ pt: 2, pb: 3, px: 4 }}>
           <Box sx={{ display: "flex", alignItems: "center" }}>
-          
             <Box
               sx={{
                 display: "flex",
@@ -103,21 +101,17 @@ const UserDropdown = (props) => {
               }}
             >
               <Typography sx={{ fontWeight: 600 }}>Menu</Typography>
-            
             </Box>
           </Box>
         </Box>
         <Divider sx={{ mt: "0 !important" }} />
-        <MenuItem
-          sx={{ p: 0 }}
-          onClick={() =>  navigate("/compare")}
-        >
+        <MenuItem sx={{ p: 0 }} onClick={() => navigate("/compare")}>
           <Box sx={styles}>
             <FaceIcon />
             Compare
           </Box>
         </MenuItem>
-        <MenuItem
+        {/* <MenuItem
           sx={{ p: 0 }}
           onClick={() => handleDropdownClose("/apps/email")}
         >
@@ -125,17 +119,13 @@ const UserDropdown = (props) => {
             <InboxIcon />
             Past History
           </Box>
-        </MenuItem>
-        <MenuItem
-          sx={{ p: 0 }}
-          onClick={() => handleDropdownClose("/apps/chat")}
-        >
+        </MenuItem> */}
+        <MenuItem sx={{ p: 0 }} onClick={() => navigate("/chat")}>
           <Box sx={styles}>
             <ChatIcon />
             ChatBot
           </Box>
         </MenuItem>
-      
       </Menu>
     </Fragment>
   );

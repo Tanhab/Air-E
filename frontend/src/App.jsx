@@ -7,6 +7,7 @@ import HeatMapTest from "./pages/HeatMapTest.jsx";
 import Compare from "./pages/Compare";
 import HeatMapTest2 from "./pages/heatmaptest2";
 import MapTest2 from "./pages/test2";
+import ChatUI from "./pages/ChatBot";
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
           <Route path="/compare" element={<Compare />} />
           <Route path="/hm" element={<HeatMapTest2 />} />
           <Route path="/hm2" element={<MapTest2 />} />
+          <Route path="/chat" element={<ChatUI/>}/>
         </Routes>
       </BrowserRouter>
     </>
