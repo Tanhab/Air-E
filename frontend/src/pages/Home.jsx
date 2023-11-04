@@ -20,7 +20,7 @@ import {
   Skeleton,
 } from "@mui/material";
 import cityAtom from "../atoms/cityAtom";
-import {getDataByName,getDataByLngLat} from "../api/searchApi";
+import { getDataByName, getDataByLngLat,getRankingDataByAQI } from "../api/searchApi";
 
 mapboxgl.accessToken = import.meta.env.VITE_MAPBOX_TOKEN;
 
@@ -33,9 +33,11 @@ export default function Home() {
   const [showSidebar, setShowSidebar] = useState(false);
   const [markers, setMarkers] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [city, setCity] = useRecoilState(cityAtom)
-  const [modalData, setModalData] = useState({})
-  
+  const [city, setCity] = useRecoilState(cityAtom);
+  const [modalData, setModalData] = useState({});
+  const [best10Data, setBest10Data] = useState({})
+  const [worst10data, setWorst10Data] = useState({})
+
   const dummyData = [
     { rank: 1, city: "City 1", aqi: 20 },
     { rank: 2, city: "City 2", aqi: 30 },
@@ -50,30 +52,41 @@ export default function Home() {
     // Add more dummy data for 10 rows
   ];
 
-  useEffect(()=> {
-    
-    async function fetchData(){
-    if(city !== null){
-      let data = await getDataByName(city)
-      console.log(data)
-      if(!data.error){
-      setModalData(data)
-      setIsModalOpen(true)
-      map.current.flyTo({
-        center : [data.lng, data.lat],
-        essential: true,
-        zoom: 7,
-        speed: 0.8,
-  
-      })
+  useEffect(() => {
+    async function fetchData() {
+        let data = await getRankingDataByAQI();
+        console.log(data);
+        if (!data.error) {
+          setBest10Data(data.topTen)
+          setWorst10Data(data.lastTen)
+        } else {
+          console.log(data);
+        }
     }
-      else{
-        console.log(data)
-      }
-    }else closeModal()
-  }
-  fetchData()
-  },[city,map])
+    fetchData();
+  }, []);
+
+  useEffect(() => {
+    async function fetchData() {
+      if (city !== null) {
+        let data = await getDataByName(city);
+        console.log(data);
+        if (!data.error) {
+          setModalData(data);
+          setIsModalOpen(true);
+          map.current.flyTo({
+            center: [data.lng, data.lat],
+            essential: true,
+            zoom: 7,
+            speed: 0.8,
+          });
+        } else {
+          console.log(data);
+        }
+      } else closeModal();
+    }
+    fetchData();
+  }, [city, map]);
   useEffect(() => {
     if (!map.current) {
       map.current = new mapboxgl.Map({
@@ -82,8 +95,6 @@ export default function Home() {
         center: [-70.9, 42.35],
         zoom: 2,
       });
-
-      
 
       map.current.on("click", async (e) => {
         const { lng, lat } = e.lngLat;
@@ -95,27 +106,26 @@ export default function Home() {
 
         // Store the marker data in the state
         setMarkers((prevMarkers) => [...prevMarkers, { lat, lng }]);
-        setIsModalOpen(true)
-        setLoading(true)
-        let data = await getDataByLngLat(lat,lng)
-        console.log(data)
-        if(!data.error){
-          setLoading(false)
-        setModalData(data)
-       
-        // map.current.flyTo({
-        //   center : [data.lng, data.lat],
-        //   essential: true,
-        //   zoom: 7,
-        //   speed: 0.8,
-    
-        //   })
-        }else{
-          setIsModalOpen(false)
-          setLoading(false)
-            console.log(data)
-          }
-        
+        setIsModalOpen(true);
+        setLoading(true);
+        let data = await getDataByLngLat(lat, lng);
+        console.log(data);
+        if (!data.error) {
+          setLoading(false);
+          setModalData(data);
+
+          // map.current.flyTo({
+          //   center : [data.lng, data.lat],
+          //   essential: true,
+          //   zoom: 7,
+          //   speed: 0.8,
+
+          //   })
+        } else {
+          setIsModalOpen(false);
+          setLoading(false);
+          console.log(data);
+        }
       });
     }
   }, [map]);
@@ -123,14 +133,13 @@ export default function Home() {
   const openModal = () => {
     //setClickedLatLng({ lat, lng });
     setIsModalOpen(true);
-    console.log(map)
-    
+    console.log(map);
   };
 
   const closeModal = () => {
     setIsModalOpen(false);
-    setModalData({})
-    setCity(null)
+    setModalData({});
+    setCity(null);
   };
 
   const toggleSidebar = (event) => {
@@ -162,7 +171,7 @@ export default function Home() {
         {showSidebar && (
           <div className={styles.sidebarOpen} onClick={handleSidebarClick}>
             <Button
-              sx={{ color: "black", fontWeight:700 }}
+              sx={{ color: "black", fontWeight: 700 }}
               className={styles.closeButton}
               onClick={toggleSidebar}
               id="close_button"
@@ -185,26 +194,28 @@ export default function Home() {
               <Table>
                 <TableHead>
                   <TableRow sx={{ padding: 0, margin: 0 }}>
-                    <TableCell align="center" style={{ fontWeight: "bold" }}>Rank</TableCell>
+                    <TableCell align="center" style={{ fontWeight: "bold" }}>
+                      Rank
+                    </TableCell>
                     <TableCell style={{ fontWeight: "bold" }}>City</TableCell>
                     <TableCell style={{ fontWeight: "bold" }}>AQI</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {dummyData.map((row) => (
-                    <TableRow key={row.rank}>
-                      <TableCell align="center">
-                        {row.rank === 1 ? (
-                          <span>
-                            <img src="/trophy.png" height={30} width={30} />
-                          </span>
-                        ) : (
-                          row.rank
-                        )}
-                      </TableCell>
-                      <TableCell>{row.city}</TableCell>
-                      <TableCell>{row.aqi}</TableCell>
-                    </TableRow>
+                  {best10Data.map((row,index) => (
+                    <TableRow key={index} style={{ marginBottom: 10 }}>
+                    <TableCell align="center">
+                      {index+1 === 1 ? (
+                        <span>
+                          <img src="/trophy.png" height={30} width={30} />
+                        </span>
+                      ) : (
+                        index+1
+                      )}
+                    </TableCell>
+                    <TableCell>{row.name}</TableCell>
+                    <TableCell>{row.value}</TableCell>
+                  </TableRow>
                   ))}
                 </TableBody>
               </Table>
@@ -225,25 +236,27 @@ export default function Home() {
               <Table>
                 <TableHead>
                   <TableRow sx={{ padding: 0, margin: 0 }}>
-                    <TableCell align="center" style={{ fontWeight: "bold" }}>Rank</TableCell>
+                    <TableCell align="center" style={{ fontWeight: "bold" }}>
+                      Rank
+                    </TableCell>
                     <TableCell style={{ fontWeight: "bold" }}>City</TableCell>
                     <TableCell style={{ fontWeight: "bold" }}>AQI</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {dummyData.map((row) => (
-                    <TableRow key={row.rank} style={{ marginBottom: 10 }}>
+                  {worst10data.map((row,index) => (
+                    <TableRow key={index} style={{ marginBottom: 10 }}>
                       <TableCell align="center">
-                        {row.rank === 1 ? (
+                        {index+1 === 1 ? (
                           <span>
                             <img src="/trophy.png" height={30} width={30} />
                           </span>
                         ) : (
-                          row.rank
+                          index+1
                         )}
                       </TableCell>
-                      <TableCell>{row.city}</TableCell>
-                      <TableCell>{row.aqi}</TableCell>
+                      <TableCell>{row.name}</TableCell>
+                      <TableCell>{row.value}</TableCell>
                     </TableRow>
                   ))}
                 </TableBody>

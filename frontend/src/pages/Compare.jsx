@@ -13,7 +13,8 @@ import { Container, Typography } from "@mui/material";
 import { styled, useTheme } from "@mui/material/styles";
 import themeConfig from "../configs/themeConfig";
 import { ReactSearchAutocomplete } from "react-search-autocomplete";
-
+import axios from "axios";
+import { getDataByName } from "../api/searchApi";
 const LinkStyled = styled(Link)(({ theme }) => ({
   display: "flex",
   alignItems: "center",
@@ -25,31 +26,86 @@ function createData(name, col1, col2) {
   return { name, col1, col2 };
 }
 
-const rows = [
-  createData("AQI", 159, 6.0),
-  createData("PM2.5 levels", 237, 9.0),
-  createData("PM10 levels", 262, 16.0),
-  createData("Ozone levels", 305, 3.7),
+const indicators = [
+  {
+    indicator: "aqi",
+    name: "AQI",
+    position: 0,
+  },
+
+  {
+    indicator: "co",
+    name: "CO",
+    position: 1,
+  },
+
+  {
+    indicator: "o3",
+    name: "O3",
+    position: 2,
+  },
+
+  {
+    indicator: "no",
+    name: "NO",
+    position: 3,
+  },
+
+  {
+    indicator: "no2",
+    name: "NO2",
+    position: 4,
+  },
+
+  {
+    indicator: "so2",
+    name: "SO2",
+    position: 5,
+  },
+  {
+    indicator: "pm2_5",
+    name: "PM 2.5",
+    position: 6,
+  },
+  {
+    indicator: "pm10",
+    name: "PM 10",
+    position: 7,
+  },
 ];
 
-const suggestion = [
-  // ... (suggestion data)
-];
+const defaultRows = indicators.map((e) => [e.name, null, null]);
 
 export default function Compare() {
   const theme = useTheme();
   theme.palette.primary.main = "#2596be";
+  const [suggestion, setSuggestion] = useState([]);
+  const [rows, setRows] = useState(defaultRows);
 
-  const handleOnSearch = (string, results) => {
-    console.log(string, results);
+  const handleOnSearch = async (string, results) => {
+    const response = await axios.get(
+      "http://localhost:3000/v1/search/autoComplete?keyword=" + string
+    );
+    console.log(response.data);
+    setSuggestion(response.data);
   };
 
   const handleOnHover = (result) => {
     console.log(result);
   };
 
-  const handleOnSelect = (item) => {
-    console.log(item);
+  const handleOnSelect = (item, index) => {
+    const name = item.name;
+    getDataByName(name).then((e) => {
+      console.log(e);
+      let data = [...rows];
+      for (let x of indicators) {
+        let position = x.position;
+        data[position][index + 1] = e.air[x.indicator];
+      }
+      console.log(data);
+      setRows(data);
+    });
   };
 
   const handleOnFocus = () => {
@@ -61,14 +117,7 @@ export default function Compare() {
   };
 
   // Step 1: Define a state variable for column count
-  const [columnCount, setColumnCount] = useState(2); // Initial column count is 2
-
-  // Step 2: Function to increment column count
-  const addColumn = () => {
-    setColumnCount(columnCount + 1);
-  };
-
-
+  const [columnCount, setColumnCount] = useState(3); // Initial column count is 2
 
   return (
     <>
@@ -114,8 +163,8 @@ export default function Compare() {
         >
           Compare on Air Quality
         </Typography>
-        <button style={{float:"right",marginTop:10, fontWeight:700}} onClick={addColumn}>Add Another Location</button>
-        {/* Step 3: Render the additional columns based on columnCount */}
+        {/* <button style={{float:"right",marginTop:10, fontWeight:700}} onClick={addColumn}>Add Another Location</button>
+        Step 3: Render the additional columns based on columnCount */}
         <TableContainer component={Paper}>
           <Table sx={{ minWidth: 650 }} aria-label="simple table">
             <TableHead>
@@ -123,7 +172,7 @@ export default function Compare() {
                 <TableCell sx={{ width: "200px" }}>
                   Location Comparison
                 </TableCell>
-                {Array.from({ length: columnCount }).map((_, index) => (
+                {Array.from({ length: columnCount - 1 }).map((_, index) => (
                   <TableCell key={index} align="right">
                     <ReactSearchAutocomplete
                       styling={{
@@ -134,7 +183,7 @@ export default function Compare() {
                       items={suggestion}
                       onSearch={handleOnSearch}
                       onHover={handleOnHover}
-                      onSelect={handleOnSelect}
+                      onSelect={(item) => handleOnSelect(item, index)}
                       onFocus={handleOnFocus}
                       onClear={handleOnClear}
                       autoFocus
@@ -149,19 +198,14 @@ export default function Compare() {
                   key={row.name}
                   sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                 >
-                  <TableCell>{row.name}</TableCell>
                   {Array.from({ length: columnCount }).map((_, index) => (
-                    <TableCell key={index}>
-                      {/* Add cell data here */}
-                    </TableCell>
+                    <TableCell key={index}>{row[index]}</TableCell>
                   ))}
                 </TableRow>
               ))}
             </TableBody>
           </Table>
         </TableContainer>
-
-       
       </Container>
     </>
   );

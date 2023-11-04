@@ -24,4 +24,14 @@ export const getDataByLngLat = async (lat, lng) => {
   }
 };
 
+export const getRankingDataByAQI = async () => {
+  try {
+    const data = await axios.get(
+      `http://localhost:3000/v1/ranking/airQualityData?rankBy=aqi`
+    );
+    return data.data;
+  } catch (e) {
+    return { error: "API error" };
+  }
+};
 
