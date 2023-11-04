@@ -4,6 +4,7 @@ import mapboxgl from 'mapbox-gl';
 const HeatMapTest = () => {
   const mapContainerRef = useRef(null);
   const [map, setMap] = useState(null);
+  
 
   useEffect(()=>{
     const map = new mapboxgl.Map({

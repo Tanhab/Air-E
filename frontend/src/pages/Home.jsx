@@ -20,7 +20,11 @@ import {
   Skeleton,
 } from "@mui/material";
 import cityAtom from "../atoms/cityAtom";
-import { getDataByName, getDataByLngLat,getRankingDataByAQI } from "../api/searchApi";
+import {
+  getDataByName,
+  getDataByLngLat,
+  getRankingDataByAQI,
+} from "../api/searchApi";
 
 mapboxgl.accessToken = import.meta.env.VITE_MAPBOX_TOKEN;
 
@@ -30,13 +34,14 @@ export default function Home() {
   const map = useRef(null);
   const [mapBounds, setMapBounds] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [showSidebar, setShowSidebar] = useState(false);
+  const [clickedLatLng, setClickedLatLng] = useState(null);
+  const [showSidebar, setShowSidebar] = useState(true);
   const [markers, setMarkers] = useState([]);
   const [loading, setLoading] = useState(false);
   const [city, setCity] = useRecoilState(cityAtom);
   const [modalData, setModalData] = useState({});
-  const [best10Data, setBest10Data] = useState({})
-  const [worst10data, setWorst10Data] = useState({})
+  const [best10Data, setBest10Data] = useState([]);
+  const [worst10data, setWorst10Data] = useState([]);
 
   const dummyData = [
     { rank: 1, city: "City 1", aqi: 20 },
@@ -54,14 +59,14 @@ export default function Home() {
 
   useEffect(() => {
     async function fetchData() {
-        let data = await getRankingDataByAQI();
+      let data = await getRankingDataByAQI();
+      console.log(data);
+      if (!data.error) {
+        setBest10Data(data.topTen);
+        setWorst10Data(data.lastTen);
+      } else {
         console.log(data);
-        if (!data.error) {
-          setBest10Data(data.topTen)
-          setWorst10Data(data.lastTen)
-        } else {
-          console.log(data);
-        }
+      }
     }
     fetchData();
   }, []);
@@ -202,20 +207,20 @@ export default function Home() {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {best10Data.map((row,index) => (
+                  {best10Data.map((row, index) => (
                     <TableRow key={index} style={{ marginBottom: 10 }}>
-                    <TableCell align="center">
-                      {index+1 === 1 ? (
-                        <span>
-                          <img src="/trophy.png" height={30} width={30} />
-                        </span>
-                      ) : (
-                        index+1
-                      )}
-                    </TableCell>
-                    <TableCell>{row.name}</TableCell>
-                    <TableCell>{row.value}</TableCell>
-                  </TableRow>
+                      <TableCell align="center">
+                        {index + 1 === 1 ? (
+                          <span>
+                            <img src="/trophy.png" height={30} width={30} />
+                          </span>
+                        ) : (
+                          index + 1
+                        )}
+                      </TableCell>
+                      <TableCell>{row.name}</TableCell>
+                      <TableCell>{row.value}</TableCell>
+                    </TableRow>
                   ))}
                 </TableBody>
               </Table>
@@ -244,15 +249,15 @@ export default function Home() {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {worst10data.map((row,index) => (
+                  {worst10data.map((row, index) => (
                     <TableRow key={index} style={{ marginBottom: 10 }}>
                       <TableCell align="center">
-                        {index+1 === 1 ? (
+                        {index + 1 === 1 ? (
                           <span>
                             <img src="/trophy.png" height={30} width={30} />
                           </span>
                         ) : (
-                          index+1
+                          index + 1
                         )}
                       </TableCell>
                       <TableCell>{row.name}</TableCell>

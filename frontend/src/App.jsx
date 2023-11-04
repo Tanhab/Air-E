@@ -5,6 +5,8 @@ import Landing from "./pages/Landing";
 import MapTest from "./pages/MapTest";
 import HeatMapTest from "./pages/HeatMapTest.jsx";
 import Compare from "./pages/Compare";
+import HeatMapTest2 from "./pages/heatmaptest2";
+import MapTest2 from "./pages/test2";
 
 function App() {
   return (
@@ -16,6 +18,8 @@ function App() {
           <Route path="/maptest" element={<MapTest />} />
           <Route path="/heatmaptest" element={<HeatMapTest />} />
           <Route path="/compare" element={<Compare />} />
+          <Route path="/hm" element={<HeatMapTest2 />} />
+          <Route path="/hm2" element={<MapTest2 />} />
         </Routes>
       </BrowserRouter>
     </>

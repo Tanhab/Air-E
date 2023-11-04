@@ -15,7 +15,7 @@ const Legend = (props) => {
 
   return (
     <>
-      <div className="bg-white absolute bottom right mr12 mb24 py12 px12 shadow-darken10 round z1 wmax180">
+      <div style={{backgroundColor:"#F0FFFF"}} className="border absolute bottom right mr12 mb30 py12 px12 shadow-darken10 round z1 wmax180">
         <div className="mb6">
           <h2 className="txt-bold txt-s block">{props.active.name}</h2>
           <p className="txt-s color-gray">{props.active.description}</p>
