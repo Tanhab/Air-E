@@ -44,7 +44,6 @@ export default function Home() {
   const [best10Data, setBest10Data] = useState([]);
   const [worst10data, setWorst10Data] = useState([]);
 
-
   useEffect(() => {
     async function fetchData() {
       let data = await getRankingDataByAQI();
@@ -258,8 +257,8 @@ export default function Home() {
             </TableContainer>
           </div>
         )}
-
-        <HeatMapTest2/>
+        <Button>Toggle</Button>
+        <HeatMapTest2 />
         <div
           className={styles.mapcontainer}
           ref={mapContainer}
@@ -284,7 +283,6 @@ export default function Home() {
             {/* <img src="/flag.png" height={30} width={30} alt="" /> */}
           </div>
         ))}
-        
       </div>
 
       <Modal
@@ -302,7 +300,7 @@ export default function Home() {
           sx={{
             position: "absolute",
             bottom: "30%",
-            right: "15%",
+            right: "20%",
             transform: "translate(50%, 50%)",
             width: 400,
             bgcolor: "#C1E1C1",
