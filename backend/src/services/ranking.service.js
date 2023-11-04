@@ -56,6 +56,13 @@ const getPopulationRanking = async (rankBy) => {
 const getAirRanking = async (rankBy) => {
   const topTen = await City.aggregate([
     {
+        $match:{
+            'air.aqi':{
+                $ne:null
+            }
+        }
+    },
+    {
       $sort: {
         ['air.' + rankBy]: 1,
       },
