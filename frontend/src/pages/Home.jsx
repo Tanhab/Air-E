@@ -25,6 +25,7 @@ import {
   getDataByLngLat,
   getRankingDataByAQI,
 } from "../api/searchApi";
+import HeatMapTest2 from "./heatmaptest2";
 
 mapboxgl.accessToken = import.meta.env.VITE_MAPBOX_TOKEN;
 
@@ -43,19 +44,6 @@ export default function Home() {
   const [best10Data, setBest10Data] = useState([]);
   const [worst10data, setWorst10Data] = useState([]);
 
-  const dummyData = [
-    { rank: 1, city: "City 1", aqi: 20 },
-    { rank: 2, city: "City 2", aqi: 30 },
-    { rank: 2, city: "City 2", aqi: 30 },
-    { rank: 2, city: "City 2", aqi: 30 },
-    { rank: 2, city: "City 2", aqi: 30 },
-    { rank: 2, city: "City 2", aqi: 30 },
-    { rank: 2, city: "City 2", aqi: 30 },
-    { rank: 2, city: "City 2", aqi: 30 },
-    { rank: 2, city: "City 2", aqi: 30 },
-    { rank: 2, city: "City 2", aqi: 30 },
-    // Add more dummy data for 10 rows
-  ];
 
   useEffect(() => {
     async function fetchData() {
@@ -92,48 +80,49 @@ export default function Home() {
     }
     fetchData();
   }, [city, map]);
-  useEffect(() => {
-    if (!map.current) {
-      map.current = new mapboxgl.Map({
-        container: mapContainer.current,
-        style: "mapbox://styles/sagor60/cloialudf003j01prgw21f3jd",
-        center: [-70.9, 42.35],
-        zoom: 2,
-      });
 
-      map.current.on("click", async (e) => {
-        const { lng, lat } = e.lngLat;
+  // useEffect(() => {
+  //   if (!map.current) {
+  //     map.current = new mapboxgl.Map({
+  //       container: mapContainer.current,
+  //       style: "mapbox://styles/sagor60/cloialudf003j01prgw21f3jd",
+  //       center: [-70.9, 42.35],
+  //       zoom: 2,
+  //     });
 
-        // Create a new marker object
-        const newMarker = new mapboxgl.Marker()
-          .setLngLat([lng, lat])
-          .addTo(map.current);
+  //     map.current.on("click", async (e) => {
+  //       const { lng, lat } = e.lngLat;
 
-        // Store the marker data in the state
-        setMarkers((prevMarkers) => [...prevMarkers, { lat, lng }]);
-        setIsModalOpen(true);
-        setLoading(true);
-        let data = await getDataByLngLat(lat, lng);
-        console.log(data);
-        if (!data.error) {
-          setLoading(false);
-          setModalData(data);
+  //       // Create a new marker object
+  //       const newMarker = new mapboxgl.Marker()
+  //         .setLngLat([lng, lat])
+  //         .addTo(map.current);
 
-          // map.current.flyTo({
-          //   center : [data.lng, data.lat],
-          //   essential: true,
-          //   zoom: 7,
-          //   speed: 0.8,
+  //       // Store the marker data in the state
+  //       setMarkers((prevMarkers) => [...prevMarkers, { lat, lng }]);
+  //       setIsModalOpen(true);
+  //       setLoading(true);
+  //       let data = await getDataByLngLat(lat, lng);
+  //       console.log(data);
+  //       if (!data.error) {
+  //         setLoading(false);
+  //         setModalData(data);
 
-          //   })
-        } else {
-          setIsModalOpen(false);
-          setLoading(false);
-          console.log(data);
-        }
-      });
-    }
-  }, [map]);
+  //         // map.current.flyTo({
+  //         //   center : [data.lng, data.lat],
+  //         //   essential: true,
+  //         //   zoom: 7,
+  //         //   speed: 0.8,
+
+  //         //   })
+  //       } else {
+  //         setIsModalOpen(false);
+  //         setLoading(false);
+  //         console.log(data);
+  //       }
+  //     });
+  //   }
+  // }, [map]);
 
   const openModal = () => {
     //setClickedLatLng({ lat, lng });
@@ -269,6 +258,8 @@ export default function Home() {
             </TableContainer>
           </div>
         )}
+
+        <HeatMapTest2/>
         <div
           className={styles.mapcontainer}
           ref={mapContainer}
@@ -293,7 +284,7 @@ export default function Home() {
             {/* <img src="/flag.png" height={30} width={30} alt="" /> */}
           </div>
         ))}
-        ;
+        
       </div>
 
       <Modal
