@@ -26,6 +26,7 @@ import {
   getRankingDataByAQI,
 } from "../api/searchApi";
 import HeatMapTest2 from "./heatmaptest2";
+import { flytoAtom } from "../atoms/flytoAtom";
 
 mapboxgl.accessToken = import.meta.env.VITE_MAPBOX_TOKEN;
 
@@ -40,6 +41,7 @@ export default function Home() {
   const [markers, setMarkers] = useState([]);
   const [loading, setLoading] = useState(false);
   const [city, setCity] = useRecoilState(cityAtom);
+  const [flyTo, setFlyTo] = useRecoilState(flytoAtom);
   const [modalData, setModalData] = useState({});
   const [best10Data, setBest10Data] = useState([]);
   const [worst10data, setWorst10Data] = useState([]);
@@ -65,13 +67,8 @@ export default function Home() {
         console.log(data);
         if (!data.error) {
           setModalData(data);
+          setFlyTo({lng:data.lng, lat:data.lat})
           setIsModalOpen(true);
-          map.current.flyTo({
-            center: [data.lng, data.lat],
-            essential: true,
-            zoom: 7,
-            speed: 0.8,
-          });
         } else {
           console.log(data);
         }
