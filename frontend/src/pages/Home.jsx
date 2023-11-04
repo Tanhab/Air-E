@@ -271,9 +271,23 @@ export default function Home() {
             </TableContainer>
           </div>
         )}
-
+        <Button>Toggle</Button>
         <HeatMapTest2 />
-
+        <div
+          className={styles.mapcontainer}
+          ref={mapContainer}
+          onClick={toggleSidebar}
+        >
+          {mapBounds && (
+            <div>
+              <p>Map Bounds:</p>
+              <p>Top Left (Latitude): {mapBounds.getNorth()}</p>
+              <p>Top Left (Longitude): {mapBounds.getWest()}</p>
+              <p>Bottom Right (Latitude): {mapBounds.getSouth()}</p>
+              <p>Bottom Right (Longitude): {mapBounds.getEast()}</p>
+            </div>
+          )}
+        </div>
         {markers.map((marker, index) => (
           <div
             key={index}
@@ -300,7 +314,7 @@ export default function Home() {
           sx={{
             position: "absolute",
             bottom: "30%",
-            right: "15%",
+            right: "20%",
             transform: "translate(50%, 50%)",
             width: 400,
             bgcolor: "#C1E1C1",
