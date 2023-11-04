@@ -7,6 +7,7 @@ import data from "../data/data.json";
 import { flytoAtom } from "../atoms/flytoAtom";
 import { selectedPropertyAtom } from "../atoms/propertySelected";
 import { useRecoilState } from "recoil";
+import { mapClicAtom } from "../atoms/mapClickAtom";
 
 mapboxgl.accessToken = import.meta.env.VITE_MAPBOX_TOKEN;
 const options = [
@@ -98,6 +99,7 @@ const MapPopulation = () => {
   const mapContainerRef = useRef(null);
   const [active, setActive] = useState(options[0]);
   const [map, setMap] = useState(null);
+  const [mapClicked, setMapClicked] = useRecoilState(mapClicAtom);
 
   
   const [flyTo, setFlyTo] = useRecoilState(flytoAtom);
@@ -121,6 +123,15 @@ const MapPopulation = () => {
       style: "mapbox://styles/sagor60/cloialudf003j01prgw21f3jd",
       center: [5, 34],
       zoom: 1.5,
+    });
+
+    map.on("click", async (e) => {
+      const { lng, lat } = e.lngLat;
+
+      // Create a new marker object
+      const newMarker = new mapboxgl.Marker().setLngLat([lng, lat]).addTo(map);
+      
+      setMapClicked({lng,lat});
     });
 
     map.on("load", () => {
