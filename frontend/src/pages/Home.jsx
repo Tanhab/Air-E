@@ -188,7 +188,7 @@ export default function Home() {
                       Rank
                     </TableCell>
                     <TableCell style={{ fontWeight: "bold" }}>City</TableCell>
-                    <TableCell style={{ fontWeight: "bold" }}>AQI</TableCell>
+                    <TableCell style={{ fontWeight: "bold" }}>Severity</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
@@ -230,7 +230,7 @@ export default function Home() {
                       Rank
                     </TableCell>
                     <TableCell style={{ fontWeight: "bold" }}>City</TableCell>
-                    <TableCell style={{ fontWeight: "bold" }}>AQI</TableCell>
+                    <TableCell style={{ fontWeight: "bold" }}>Severity</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
@@ -254,8 +254,9 @@ export default function Home() {
             </TableContainer>
           </div>
         )}
-        <Button>Toggle</Button>
+        <Button className={styles.searchBar}>Toggle</Button>
         <HeatMapTest2 />
+        
         <div
           className={styles.mapcontainer}
           ref={mapContainer}
