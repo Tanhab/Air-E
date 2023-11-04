@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
@@ -11,7 +11,9 @@ import InputBase from "@mui/material/InputBase";
 import NotificationDropdown from "../NotificationDropdown";
 import UserDropdown from "../UserDropdown";
 import { ReactSearchAutocomplete } from "react-search-autocomplete";
-import suggestion from "../../data/suggestions";
+import { useRecoilState } from "recoil";
+import cityAtom from "../../atoms/cityAtom";
+import axios from "axios";
 const LinkStyled = styled(Link)(({ theme }) => ({
   display: "flex",
   alignItems: "center",
@@ -19,23 +21,26 @@ const LinkStyled = styled(Link)(({ theme }) => ({
   marginRight: theme.spacing(8),
 }));
 
-
-
 export default function Navbar() {
   const theme = useTheme();
+  const [city, setCity] = useRecoilState(cityAtom);
+  const [suggestion, setSuggestion] = useState([]);
 
-  const handleOnSearch = (string, results) => {
-    console.log("handleOnSearch");
-    console.log(results);
+  const handleOnSearch = async (string, results) => {
+    const response = await axios.get(
+      "http://localhost:3000/v1/search/autoComplete?keyword=" + string
+    );
+    console.log(response.data);
+    setSuggestion(response.data);
   };
 
-  const handleOnHover = (result) => {
-    console.log(result);
-  };
+  const handleOnHover = (result) => {};
 
   const handleOnSelect = (item) => {
     console.log("handleOnSelect");
     console.log(item);
+    setCity(item.name);
+    console.log(city);
   };
 
   const handleOnFocus = () => {
@@ -75,7 +80,7 @@ export default function Navbar() {
               {themeConfig.templateName}
             </Typography>
           </LinkStyled>
-          <div  style={{ width: 400 }}>
+          <div style={{ width: 400 }}>
             <ReactSearchAutocomplete
               styling={{
                 width: "100",
@@ -89,8 +94,6 @@ export default function Navbar() {
               onFocus={handleOnFocus}
               onClear={handleOnClear}
               autoFocus
-              
-              
             />
           </div>
 
