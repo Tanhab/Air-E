@@ -4,6 +4,8 @@ import Legend from "../components/Legend";
 import Optionsfield from "../components/OptionsField";
 // import './Map.css';
 import data from "../data/data.json";
+import { useRecoilState } from "recoil";
+import { flytoAtom } from "../atoms/flytoAtom";
 
 const HeatMapTest2 = () => {
   const options = [
@@ -33,7 +35,7 @@ const HeatMapTest2 = () => {
         ["Hazardous", "#800020"],
       ],
     },
-    
+
     {
       name: "Ozone level",
       description: "Estimated Ozone level",
@@ -74,12 +76,22 @@ const HeatMapTest2 = () => {
         ["Hazardous", "#800020"],
       ],
     },
-  
   ];
   const mapContainerRef = useRef(null);
   const [active, setActive] = useState(options[0]);
   const [mapState, setMapState] = useState(null);
+  const [flyTo, setFlyTo] = useRecoilState(flytoAtom);
 
+  useEffect(() => {
+    if (flyTo) {
+      mapState.flyTo({
+        center: [data.lng, data.lat],
+        essential: true,
+        zoom: 7,
+        speed: 0.8,
+      });
+    }
+  }, [flyTo]);
   useEffect(() => {
     const map = new mapboxgl.Map({
       container: mapContainerRef.current,
