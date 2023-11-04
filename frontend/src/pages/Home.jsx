@@ -273,7 +273,7 @@ export default function Home() {
             </TableContainer>
           </div>
         )}
-        <Button
+        <Button className={styles.searchBar}
           onClick={(e) => {
             setIsAirMap((e) => {
               return !e;
@@ -284,6 +284,7 @@ export default function Home() {
         </Button>
 
         {isAirMap ? <HeatMapTest2 /> : <MapPopulation />}
+        
         <div
           className={styles.mapcontainer}
           ref={mapContainer}
