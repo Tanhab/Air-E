@@ -44,6 +44,7 @@ export default function Home() {
   const [loading, setLoading] = useState(false);
   const [city, setCity] = useRecoilState(cityAtom);
   const [flyTo, setFlyTo] = useRecoilState(flytoAtom);
+  const [flyTo, setFlyTo] = useRecoilState(flytoAtom);
   const [modalData, setModalData] = useState({});
   const [best10Data, setBest10Data] = useState([]);
   const [worst10data, setWorst10Data] = useState([]);
