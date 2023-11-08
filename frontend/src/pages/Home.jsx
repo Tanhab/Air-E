@@ -24,6 +24,7 @@ import {
   getDataByName,
   getDataByLngLat,
   getRankingData,
+  getRankingData,
 } from "../api/searchApi";
 import HeatMapTest2 from "./heatmaptest2";
 import { flytoAtom } from "../atoms/flytoAtom";
@@ -73,7 +74,10 @@ export default function Home() {
   useEffect(() => {
     if (!selectedProperty) return;
 
+    if (!selectedProperty) return;
+
     async function fetchData() {
+      let data = await getRankingData(selectedProperty);
       let data = await getRankingData(selectedProperty);
       console.log(data);
       if (!data.error) {
@@ -85,6 +89,7 @@ export default function Home() {
     }
     fetchData();
   }, [selectedProperty]);
+  }, [selectedProperty]);
 
   useEffect(() => {
     async function fetchData() {
@@ -93,6 +98,7 @@ export default function Home() {
         console.log(data);
         if (!data.error) {
           setModalData(data);
+          setFlyTo({ lng: data.lng, lat: data.lat });
           setFlyTo({ lng: data.lng, lat: data.lat });
           setIsModalOpen(true);
         } else {
@@ -243,6 +249,7 @@ export default function Home() {
               }}
             >
               Top 10
+              Top 10
             </Typography>
             <TableContainer component={Paper}>
               <Table>
@@ -250,6 +257,14 @@ export default function Home() {
                   <TableRow sx={{ padding: 0, margin: 0 }}>
                     <TableCell align="center" style={{ fontWeight: "bold" }}>
                       Rank
+                    </TableCell>
+                    <TableCell style={{ fontWeight: "bold" }}>
+                      {selectedProperty?.type === "air" ? "City" : "Country"}
+                    </TableCell>
+                    <TableCell
+                      style={{ fontWeight: "bold", textTransform: "uppercase" }}
+                    >
+                      {selectedProperty?.property}
                     </TableCell>
                     <TableCell style={{ fontWeight: "bold" }}>
                       {selectedProperty?.type === "air" ? "City" : "Country"}
@@ -291,6 +306,7 @@ export default function Home() {
               }}
             >
               Last 10
+              Last 10
             </Typography>
             <TableContainer component={Paper}>
               <Table>
@@ -298,6 +314,14 @@ export default function Home() {
                   <TableRow sx={{ padding: 0, margin: 0 }}>
                     <TableCell align="center" style={{ fontWeight: "bold" }}>
                       Rank
+                    </TableCell>
+                    <TableCell style={{ fontWeight: "bold" }}>
+                      {selectedProperty?.type === "air" ? "City" : "Country"}
+                    </TableCell>
+                    <TableCell
+                      style={{ fontWeight: "bold", textTransform: "uppercase" }}
+                    >
+                      {selectedProperty?.property}
                     </TableCell>
                     <TableCell style={{ fontWeight: "bold" }}>
                       {selectedProperty?.type === "air" ? "City" : "Country"}

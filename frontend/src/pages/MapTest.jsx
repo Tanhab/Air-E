@@ -165,10 +165,10 @@ const MapPopulation = () => {
         "country-label"
       );
 
-      map.setPaintProperty("countries", "fill-color", {
-        property: active.property,
-        stops: active.stops,
-      });
+      // map.setPaintProperty("countries", "fill-color", {
+      //   property: active.property,
+      //   stops: active.stops,
+      // });
 
       setMap(map);
     });
@@ -187,10 +187,7 @@ const MapPopulation = () => {
 
   const paint = () => {
     if (map) {
-      map.setPaintProperty("countries", "fill-color", {
-        property: active.property,
-        stops: active.stops,
-      });
+     
     }
   };
 
