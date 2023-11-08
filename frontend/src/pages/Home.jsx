@@ -28,6 +28,7 @@ import {
 import HeatMapTest2 from "./heatmaptest2";
 import { flytoAtom } from "../atoms/flytoAtom";
 import { selectedPropertyAtom } from "../atoms/propertySelected";
+import MapPopulation from "./MapTest";
 
 mapboxgl.accessToken = import.meta.env.VITE_MAPBOX_TOKEN;
 
@@ -46,6 +47,7 @@ export default function Home() {
   const [modalData, setModalData] = useState({});
   const [best10Data, setBest10Data] = useState([]);
   const [worst10data, setWorst10Data] = useState([]);
+  const [isAirMap, setIsAirMap] = useState(true);
   const [selectedProperty, setSelectedProperty] =
     useRecoilState(selectedPropertyAtom);
 
@@ -271,8 +273,17 @@ export default function Home() {
             </TableContainer>
           </div>
         )}
-        <Button>Toggle</Button>
-        <HeatMapTest2 />
+        <Button
+          onClick={(e) => {
+            setIsAirMap((e) => {
+              return !e;
+            });
+          }}
+        >
+          Toggle
+        </Button>
+
+        {isAirMap ? <HeatMapTest2 /> : <MapPopulation />}
         <div
           className={styles.mapcontainer}
           ref={mapContainer}
