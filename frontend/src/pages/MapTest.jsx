@@ -94,16 +94,14 @@ const options = [
 ];
 
 const MapPopulation = () => {
-
- 
   const mapContainerRef = useRef(null);
   const [active, setActive] = useState(options[0]);
   const [map, setMap] = useState(null);
   const [mapClicked, setMapClicked] = useRecoilState(mapClicAtom);
 
-  
   const [flyTo, setFlyTo] = useRecoilState(flytoAtom);
-  const [selectedProperty, setSelectedProperty] = useRecoilState(selectedPropertyAtom);
+  const [selectedProperty, setSelectedProperty] =
+    useRecoilState(selectedPropertyAtom);
 
   useEffect(() => {
     if (flyTo) {
@@ -130,14 +128,14 @@ const MapPopulation = () => {
 
       // Create a new marker object
       const newMarker = new mapboxgl.Marker().setLngLat([lng, lat]).addTo(map);
-      
-      setMapClicked({lng,lat});
+
+      setMapClicked({ lng, lat });
     });
 
     map.on("load", () => {
       map.addSource("countries", {
         type: "geojson",
-        data:'http://localhost:3000/v1/geojson/populationData'
+        data: "http://localhost:3000/v1/geojson/populationData",
       });
 
       map.setLayoutProperty("country-label", "text-field", [
@@ -165,10 +163,10 @@ const MapPopulation = () => {
         "country-label"
       );
 
-      // map.setPaintProperty("countries", "fill-color", {
-      //   property: active.property,
-      //   stops: active.stops,
-      // });
+      map.setPaintProperty("countries", "fill-color", {
+        property: active.property,
+        stops: active.stops,
+      });
 
       setMap(map);
     });
@@ -178,16 +176,18 @@ const MapPopulation = () => {
   }, []);
 
   useEffect(() => {
-    paint();
     setSelectedProperty({
-      type:'population',
-      property:active.property
-    })
+      type: "population",
+      property: active.property,
+    });
   }, [active]);
 
   const paint = () => {
     if (map) {
-     
+      map.setPaintProperty("countries", "fill-color", {
+        property: active.property,
+        stops: active.stops,
+      });
     }
   };
 

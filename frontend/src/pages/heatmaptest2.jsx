@@ -38,9 +38,9 @@ const options = [
   },
 
   {
-    name: "CO2 level",
-    description: "Estimated Carbon Dioxide level",
-    property: "co2",
+    name: "NH3 level",
+    description: "Estimated Amonia level",
+    property: "nh3",
     stops: [
       ["Good", "#AFE1AF"],
       ["Moderate", "#FBEC5D"],

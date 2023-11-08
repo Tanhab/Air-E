@@ -24,7 +24,6 @@ import {
   getDataByName,
   getDataByLngLat,
   getRankingData,
-  getRankingData,
 } from "../api/searchApi";
 import HeatMapTest2 from "./heatmaptest2";
 import { flytoAtom } from "../atoms/flytoAtom";
@@ -44,7 +43,6 @@ export default function Home() {
   const [markers, setMarkers] = useState([]);
   const [loading, setLoading] = useState(false);
   const [city, setCity] = useRecoilState(cityAtom);
-  const [flyTo, setFlyTo] = useRecoilState(flytoAtom);
   const [flyTo, setFlyTo] = useRecoilState(flytoAtom);
   const [modalData, setModalData] = useState({});
   const [best10Data, setBest10Data] = useState([]);
@@ -78,7 +76,7 @@ export default function Home() {
 
     async function fetchData() {
       let data = await getRankingData(selectedProperty);
-      let data = await getRankingData(selectedProperty);
+
       console.log(data);
       if (!data.error) {
         setBest10Data(data.topTen);
@@ -89,7 +87,7 @@ export default function Home() {
     }
     fetchData();
   }, [selectedProperty]);
-  }, [selectedProperty]);
+
 
   useEffect(() => {
     async function fetchData() {
@@ -98,7 +96,6 @@ export default function Home() {
         console.log(data);
         if (!data.error) {
           setModalData(data);
-          setFlyTo({ lng: data.lng, lat: data.lat });
           setFlyTo({ lng: data.lng, lat: data.lat });
           setIsModalOpen(true);
         } else {
@@ -109,92 +106,7 @@ export default function Home() {
     fetchData();
   }, [city, map]);
 
-  // useEffect(() => {
-  //   if (!map.current) {
-  //     map.current = new mapboxgl.Map({
-  //       container: mapContainer.current,
-  //       style: "mapbox://styles/sagor60/cloialudf003j01prgw21f3jd",
-  //       center: [-70.9, 42.35],
-  //       zoom: 2,
-  //     });
 
-  // useEffect(() => {
-  //   if (!map.current) {
-  //     map.current = new mapboxgl.Map({
-  //       container: mapContainer.current,
-  //       style: "mapbox://styles/sagor60/cloialudf003j01prgw21f3jd",
-  //       center: [-70.9, 42.35],
-  //       zoom: 2,
-  //     });
-
-  //     map.current.on("click", async (e) => {
-  //       const { lng, lat } = e.lngLat;
-  //     map.current.on("click", async (e) => {
-  //       const { lng, lat } = e.lngLat;
-
-  //       // Create a new marker object
-  //       const newMarker = new mapboxgl.Marker()
-  //         .setLngLat([lng, lat])
-  //         .addTo(map.current);
-  //       // Create a new marker object
-  //       const newMarker = new mapboxgl.Marker()
-  //         .setLngLat([lng, lat])
-  //         .addTo(map.current);
-
-  //       // Store the marker data in the state
-  //       setMarkers((prevMarkers) => [...prevMarkers, { lat, lng }]);
-  //       setIsModalOpen(true);
-  //       setLoading(true);
-  //       let data = await getDataByLngLat(lat, lng);
-  //       console.log(data);
-  //       if (!data.error) {
-  //         setLoading(false);
-  //         setModalData(data);
-  //       // Store the marker data in the state
-  //       setMarkers((prevMarkers) => [...prevMarkers, { lat, lng }]);
-  //       setIsModalOpen(true);
-  //       setLoading(true);
-  //       let data = await getDataByLngLat(lat, lng);
-  //       console.log(data);
-  //       if (!data.error) {
-  //         setLoading(false);
-  //         setModalData(data);
-
-  //         // map.current.flyTo({
-  //         //   center : [data.lng, data.lat],
-  //         //   essential: true,
-  //         //   zoom: 7,
-  //         //   speed: 0.8,
-  //         // map.current.flyTo({
-  //         //   center : [data.lng, data.lat],
-  //         //   essential: true,
-  //         //   zoom: 7,
-  //         //   speed: 0.8,
-
-  //         //   })
-  //       } else {
-  //         setIsModalOpen(false);
-  //         setLoading(false);
-  //         console.log(data);
-  //       }
-  //     });
-  //   }
-  // }, [map]);
-  //         //   })
-  //       } else {
-  //         setIsModalOpen(false);
-  //         setLoading(false);
-  //         console.log(data);
-  //       }
-  //     });
-  //   }
-  // }, [map]);
-
-  const openModal = () => {
-    //setClickedLatLng({ lat, lng });
-    setIsModalOpen(true);
-    console.log(map);
-  };
 
   const closeModal = () => {
     setIsModalOpen(false);
@@ -266,14 +178,6 @@ export default function Home() {
                     >
                       {selectedProperty?.property}
                     </TableCell>
-                    <TableCell style={{ fontWeight: "bold" }}>
-                      {selectedProperty?.type === "air" ? "City" : "Country"}
-                    </TableCell>
-                    <TableCell
-                      style={{ fontWeight: "bold", textTransform: "uppercase" }}
-                    >
-                      {selectedProperty?.property}
-                    </TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
@@ -305,7 +209,7 @@ export default function Home() {
                 mb: 2,
               }}
             >
-              Last 10
+          
               Last 10
             </Typography>
             <TableContainer component={Paper}>
@@ -314,14 +218,6 @@ export default function Home() {
                   <TableRow sx={{ padding: 0, margin: 0 }}>
                     <TableCell align="center" style={{ fontWeight: "bold" }}>
                       Rank
-                    </TableCell>
-                    <TableCell style={{ fontWeight: "bold" }}>
-                      {selectedProperty?.type === "air" ? "City" : "Country"}
-                    </TableCell>
-                    <TableCell
-                      style={{ fontWeight: "bold", textTransform: "uppercase" }}
-                    >
-                      {selectedProperty?.property}
                     </TableCell>
                     <TableCell style={{ fontWeight: "bold" }}>
                       {selectedProperty?.type === "air" ? "City" : "Country"}
