@@ -3,6 +3,7 @@ const authRoute = require('./auth.route');
 const userRoute = require('./user.route');
 const docsRoute = require('./docs.route');
 const searchRoute = require('./search.route');
+const rankingRoute = require('./ranking.route');
 const config = require('../../config/config');
 
 const router = express.Router();
@@ -19,6 +20,10 @@ const defaultRoutes = [
   {
     path:'/search',
     route: searchRoute
+  },
+  {
+    path:'/ranking',
+    route:rankingRoute
   }
 ];
 

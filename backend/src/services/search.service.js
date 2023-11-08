@@ -72,7 +72,7 @@ const autoComplete = async (keyword) => {
  * @param {Boolean} isCountry is this name is a country
  * @returns {Object} {
  *                      lat,lng,
- *                      air:{aqi,no,no2,so2 so3,co,pm2_5,pm10,nh3},
+ *                      air:{aqi,no,no2,so2 o3,co,pm2_5,pm10,nh3},
  *                      cityName,countryName,
  *                      population,population_growth,gdp,gdp_growth,gdp_per_capita
  *
