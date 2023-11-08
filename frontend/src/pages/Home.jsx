@@ -29,6 +29,7 @@ import HeatMapTest2 from "./heatmaptest2";
 import { flytoAtom } from "../atoms/flytoAtom";
 import { selectedPropertyAtom } from "../atoms/propertySelected";
 import MapPopulation from "./MapTest";
+import { mapClicAtom } from "../atoms/mapClickAtom";
 
 mapboxgl.accessToken = import.meta.env.VITE_MAPBOX_TOKEN;
 
@@ -38,7 +39,6 @@ export default function Home() {
   const map = useRef(null);
   const [mapBounds, setMapBounds] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [clickedLatLng, setClickedLatLng] = useState(null);
   const [showSidebar, setShowSidebar] = useState(true);
   const [markers, setMarkers] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -50,6 +50,24 @@ export default function Home() {
   const [isAirMap, setIsAirMap] = useState(true);
   const [selectedProperty, setSelectedProperty] =
     useRecoilState(selectedPropertyAtom);
+  const [mapClicked, setMapClicked] = useRecoilState(mapClicAtom);
+
+  useEffect(() => {
+    if (!mapClicked) return;
+
+    setIsModalOpen(true);
+    setLoading(true);
+    getDataByLngLat(mapClicked.lat, mapClicked.lng).then(e=>{
+      if(e.error){
+        setLoading(false);
+        setIsModalOpen(false);
+      }
+      else{
+        setLoading(false);
+        setModalData(e);
+      }
+    })
+  }, [mapClicked]);
 
   useEffect(() => {
     if (!selectedProperty) return;
@@ -274,16 +292,18 @@ export default function Home() {
           </div>
         )}
         <Button
+          className={styles.searchBar}
           onClick={(e) => {
             setIsAirMap((e) => {
               return !e;
             });
           }}
         >
-          Toggle
+          {isAirMap ? "Population Data" : "Air Quality Data"}
         </Button>
 
         {isAirMap ? <HeatMapTest2 /> : <MapPopulation />}
+
         <div
           className={styles.mapcontainer}
           ref={mapContainer}
