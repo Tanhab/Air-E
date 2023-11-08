@@ -2,19 +2,24 @@ const express = require('express');
 const docsRoute = require('./docs.route');
 const searchRoute = require('./search.route');
 const rankingRoute = require('./ranking.route');
+const geoJSONRoute = require('./geojson.route');
 const config = require('../../config/config');
 
 const router = express.Router();
 
 const defaultRoutes = [
   {
-    path:'/search',
-    route: searchRoute
+    path: '/search',
+    route: searchRoute,
   },
   {
-    path:'/ranking',
-    route:rankingRoute
-  }
+    path: '/ranking',
+    route: rankingRoute,
+  },
+  {
+    path: '/geojson',
+    route: geoJSONRoute,
+  },
 ];
 
 const devRoutes = [
