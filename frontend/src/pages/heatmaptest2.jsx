@@ -1,5 +1,5 @@
-import React, { useRef, useEffect, useState } from "react";
-import mapboxgl from "mapbox-gl";
+import React, { useRef, useEffect, useState } from 'react';
+import mapboxgl from 'mapbox-gl';
 import Legend from "../components/Legend";
 import Optionsfield from "../components/OptionsField";
 // import './Map.css';
@@ -337,6 +337,84 @@ const HeatMapTest2 = () => {
     }
 
     setSelectedProperty({ type: "air", property: active.property });
+    // paint();
+
+    if (mapState) {
+      mapState.removeLayer("earthquakes-heat");
+
+      mapState.addLayer(
+        {
+          id: "earthquakes-heat",
+          type: "heatmap",
+          source: "earthquakes",
+          maxzoom: 9,
+          paint: {
+            // Increase the heatmap weight based on frequency and property magnitude
+            "heatmap-weight": [
+              "interpolate",
+              ["linear"],
+              ["get", active.property],
+              0,
+              0,
+              6,
+              1,
+            ],
+            // Increase the heatmap color weight weight by zoom level
+            // heatmap-intensity is a multiplier on top of heatmap-weight
+            "heatmap-intensity": [
+              "interpolate",
+              ["linear"],
+              ["zoom"],
+              0,
+              1,
+              9,
+              3,
+            ],
+            // Color ramp for heatmap.  Domain is 0 (low) to 1 (high).
+            // Begin color ramp at 0-stop with a 0-transparancy color
+            // to create a blur-like effect.
+            "heatmap-color": [
+              "interpolate",
+              ["linear"],
+              ["heatmap-density"],
+              0,
+              "rgba(175,255,175,0)",
+              0.2,
+              "rgb(251,236,93)",
+              0.4,
+              "rgb(242,140,40)",
+              0.6,
+              "rgb(255,36,0)",
+              0.8,
+              "rgb(207,159,255)",
+              1,
+              "rgb(128,0,32)",
+            ],
+            // Adjust the heatmap radius by zoom level
+            "heatmap-radius": [
+              "interpolate",
+              ["linear"],
+              ["zoom"],
+              0,
+              2,
+              9,
+              20,
+            ],
+            // Transition from heatmap to circle layer by zoom level
+            "heatmap-opacity": [
+              "interpolate",
+              ["linear"],
+              ["zoom"],
+              7,
+              1,
+              9,
+              0,
+            ],
+          },
+        },
+        "waterway-label"
+      );
+    }
   }, [active]);
 
   const paint = () => {

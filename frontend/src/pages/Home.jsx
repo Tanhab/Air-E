@@ -111,6 +111,17 @@ export default function Home() {
   //       zoom: 2,
   //     });
 
+  // useEffect(() => {
+  //   if (!map.current) {
+  //     map.current = new mapboxgl.Map({
+  //       container: mapContainer.current,
+  //       style: "mapbox://styles/sagor60/cloialudf003j01prgw21f3jd",
+  //       center: [-70.9, 42.35],
+  //       zoom: 2,
+  //     });
+
+  //     map.current.on("click", async (e) => {
+  //       const { lng, lat } = e.lngLat;
   //     map.current.on("click", async (e) => {
   //       const { lng, lat } = e.lngLat;
 
@@ -118,7 +129,20 @@ export default function Home() {
   //       const newMarker = new mapboxgl.Marker()
   //         .setLngLat([lng, lat])
   //         .addTo(map.current);
+  //       // Create a new marker object
+  //       const newMarker = new mapboxgl.Marker()
+  //         .setLngLat([lng, lat])
+  //         .addTo(map.current);
 
+  //       // Store the marker data in the state
+  //       setMarkers((prevMarkers) => [...prevMarkers, { lat, lng }]);
+  //       setIsModalOpen(true);
+  //       setLoading(true);
+  //       let data = await getDataByLngLat(lat, lng);
+  //       console.log(data);
+  //       if (!data.error) {
+  //         setLoading(false);
+  //         setModalData(data);
   //       // Store the marker data in the state
   //       setMarkers((prevMarkers) => [...prevMarkers, { lat, lng }]);
   //       setIsModalOpen(true);
@@ -134,7 +158,21 @@ export default function Home() {
   //         //   essential: true,
   //         //   zoom: 7,
   //         //   speed: 0.8,
+  //         // map.current.flyTo({
+  //         //   center : [data.lng, data.lat],
+  //         //   essential: true,
+  //         //   zoom: 7,
+  //         //   speed: 0.8,
 
+  //         //   })
+  //       } else {
+  //         setIsModalOpen(false);
+  //         setLoading(false);
+  //         console.log(data);
+  //       }
+  //     });
+  //   }
+  // }, [map]);
   //         //   })
   //       } else {
   //         setIsModalOpen(false);
