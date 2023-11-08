@@ -5,6 +5,7 @@ const logger = require('./config/logger');
 const uploadData = require('./data/data_uploader');
 const { updatePopulationData, updateAirData } = require('./data/data_updater');
 const { buildPopulationGeoJSON, buildAirQualityDataJSON } = require('./geojson/populationDataBuilder');
+const { buildPopulationGeoJSON, buildAirQualityDataJSON } = require('./geojson/populationDataBuilder');
 
 let server;
 mongoose.set('maxTimeMS', 1000*60*60);
@@ -14,8 +15,7 @@ mongoose.connect(config.mongoose.url, config.mongoose.options).then(() => {
   server = app.listen(config.port, () => {
     logger.info(`Listening to port ${config.port}`);
     // uploadData();
-    
-    updateAirData();
+    //updateAirData();
     //buildAirQualityDataJSON();
     // buildPopulationGeoJSON();
   });
